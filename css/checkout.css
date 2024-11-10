@@ -141,3 +141,99 @@
 #ptcButton:hover {
     background-color: var(--soft-highlight-color);
 }
+
+/* Checkout Section */
+#checkout-section {
+    width: 75vw;
+    height: auto;
+    margin: auto;
+    border: 1px solid var(--accent-color);
+    border-radius: 30px;
+    display: flex;
+}
+/* Checkout Form Container */
+#checkout-form {
+    width: 100%;
+    height: auto;
+    background-color: var(--secondary-color);
+    border-radius: 30px;
+    padding: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+#checkout-form > .title {
+    width: 80%;
+    color: var(--primary-color);
+}
+.form-span {
+    width: 80%;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.form-line {
+    width: 100%;
+    border: 1px solid var(--accent-color);
+}
+.form-section-title {
+    min-width: 15%;
+    color: var(--accent-color);
+    font-family: 'Montserrat';
+    font-size: 8pt;
+    text-align: center;
+}
+/* Input fields */
+.form-input {
+    width: 33%;
+    height: 40px;
+    margin: 10px 10px;
+    padding-left: 10px;
+    background-color: var(--soft-highlight-color);
+    border: 1px solid var(--highlight-color);
+    border-radius: 15px;
+    color: var(--primary-color);
+}
+/* Input fields placeholders */
+.form-input::placeholder {
+    font-family: 'Montserrat';
+    color: var(--primary-color);
+}
+/* Input fields if invalid */
+.form-input:invalid {
+    background-color: var(--soft-second-highlight-color);
+    border: 1px solid var(--second-highlight-color);
+}
+#checkout-form > select {
+    width: 34%;
+    height: 45px;
+    padding-left: 5px;
+    font-family: 'Montserrat';
+    cursor: pointer;
+}
+.input-span {
+    width: 33%;
+    height: 40px;
+    color: var(--primary-color);
+    font-family: 'Montserrat';
+}
+/* Place Order Button */
+#submitButton {
+    width: 33%;
+    height: 40px;
+    margin: 20px 20px;
+    border: none;
+    border-radius: 15px;
+    background-color: var(--highlight-color);
+    font-family: 'Montserrat';
+    color: var(--primary-color);
+    cursor: pointer;
+}
+#submitButton:hover {
+    background-color: var(--soft-highlight-color);
+}
+#submitButton:disabled {
+    cursor: not-allowed;
+}

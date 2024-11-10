@@ -29,5 +29,10 @@ Now render will have smooth fade or slide transitions.
 - Modified index file to now use external subjectList from subjects.js in the data property. Expanded subjects list to 12 subjects as per requirement of the project (minimum 10 subjects).
 ### Commit 7 - Sorting Setup
 - Modified index file to have sort functionality. Now subjects get sorted by title, location, availability, & price. Sort direction can be DESC to ASC or ASC to DESC. Default sort is set for title of the subjects.
+- Modified sort-section css file.
 ### Commit 8 - Cart Items and Price Overview
 - Modified index file to show cart items and price overview in the checkout section. Now item ordered quantity can be modified in the cart section. Total price is calculated by using ordered quantity of each product x price of each product.
+- Modified checkout css file.
+### Commit 9 - Checkout Form
+- Modified index file to show simple checkout form.
+- Modified checkout css file

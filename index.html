@@ -27,9 +27,11 @@
             <!-- Navigation Bar -->
             <section id="navigation-bar">
                 <!-- School Logo -->
+                <a href="#subject-section">
                 <figure @mouseover="showSchool = true" @mouseleave="showSchool = false" v-on:click="showHomeSection()" class="nav-item">
                     <img v-bind:src="school.logo" class="nav-logo">
                 </figure>
+                </a>
                 <!-- School Info -->
                 <p @mouseover="showInfo = true" @mouseleave="showInfo = false" class="nav-item">INFO</p>
                 <!-- School Contact -->
@@ -40,7 +42,9 @@
                     <input type="text" name="search" id="search-area">
                 </div>
                 <!-- Sort Button -->
+                <a href="#cart-section">
                 <button v-on:click="showSortSection()" class="nav-item nav-button">SORT</button>
+                </a>
                 <!-- Checkout Button -->
                 <button v-on:click="showCheckoutSection()" class="nav-item nav-button">CHECKOUT&nbsp;<i class="fa-solid fa-cart-shopping"></i>&nbsp;<div id="cart-counter">{{cartItemCount}}</div></button>
             </section>
@@ -171,9 +175,65 @@
                         <!-- Total cost of all cart products -->
                         <span class="po-span-2"><p class="po-text">TOTAL</p><p class="price-text">${{ cartSubtotal.toFixed(2)}}</p></span>
                         <!-- Proceed to Checkout Form Button -->
-                        <a href="#checkout-form"><button id="ptcButton" disabled>PROCEED TO CHECKOUT</button></a>
+                        <a href="#checkout-form"><button id="ptcButton" v-on:click="showFormSection()">PROCEED TO CHECKOUT</button></a>
                     </div>
                 </section>
+                <transition name="fade" mode="out-in">
+                <!-- Checkout Section: Show Form -->
+                <section v-if="showForm" id="checkout-section">
+                    <!-- Checkout Form -->
+                    <div id="checkout-form">
+                        <h3 class="title">Checkout Form <i class="fa-solid fa-align-justify"></i></h3>
+                        <!-- Personal Information Fields -->
+                        <span class="form-span">
+                            <hr class="form-line">
+                            <p class="form-section-title">Personal Information</p>
+                            <hr class="form-line">
+                        </span>
+                        <input v-model.trim="order.firstName" type="text" placeholder="First Name" class="form-input" required>
+                        <input v-model.trim="order.lastName" type="text" placeholder="Last Name" class="form-input" required>
+                        <input v-model.trim="order.email" type="email" placeholder="Email Address" class="form-input" required>
+                        <input v-model.number="order.phone" type="tel" placeholder="Phone Number" class="form-input" required>
+                        <!-- Address Fields -->
+                        <span class="form-span">
+                            <hr class="form-line">
+                            <p class="form-section-title">Billing Address</p>
+                            <hr class="form-line">
+                        </span>
+                        <input v-model.trim="order.address" type="text" placeholder="Address" class="form-input" required>
+                        <input v-model.trim="order.city" type="text" placeholder="City" class="form-input" required>
+                        <input v-model.trim="order.zip" type="text" placeholder="Zip or Postal Code" class="form-input" required>
+                        <select v-model="order.country" class="form-input" required>
+                            <option disabled value="">Country</option>
+                            <option v-for="(country, key) in countries"
+                                v-bind:value="country">
+                                {{key}}
+                            </option>
+                        </select>
+                        <!-- Optional Fields -->
+                        <span class="form-span">
+                            <hr class="form-line">
+                            <p class="form-section-title">Optional Fields</p>
+                            <hr class="form-line">
+                        </span>
+                        <span class="input-span">
+                            <input type="checkbox" value="false" v-model="order.promotion"
+                                v-bind:true-value="order.sendPromotion"
+                                v-bind:false-value="order.dontSendPromotion">
+                            <label for="promotion">Receive Promotions</label>
+                        </span>
+                        <span class="input-span">
+                            <label>Prefered way of communication</label><br>
+                            <input type="radio" value="email" v-model="order.method">
+                            <label for="home">Email</label>
+                            <input type="radio" value="phone" v-model="order.method">
+                            <label for="business">Phone</label>
+                        </span>
+                        <!-- Place Order Button -->
+                        <button id="submitButton" v-on:click="submitForm" :disabled="isFormInvalid">Place Order</button>
+                    </div>
+                    </section>
+                </transition>
             </div>
             </transition>
         </main>
@@ -191,6 +251,7 @@
                 showContact: false,
                 showSort: false,
                 showCheckout: false,
+                showForm: false,
                 currentView: 'home',
                 // External subjects list is now called which contains all the subjects details
                 subjects: subjectList,
@@ -198,7 +259,34 @@
                     tag: 'title',
                     direction: true
                 },
-                cart: []
+                cart: [],
+                // Order details saved in order object
+                order: {
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    phone: '',
+                    address: '',
+                    city: '',
+                    country: '',
+                    zip: '',
+                    promotion: 'Do not send promotions',
+                    sendPromotion: 'Send promotions',
+                    dontSendPromotion: 'Do not send promotions',
+                    method: ''
+                },
+                // List of countries for address details in the checkout form
+                countries: {
+                    Australia: 'Australia',
+                    Austria: 'Austria',
+                    Canada: 'Canada',
+                    France: 'France',
+                    Japan: 'Japan',
+                    Mauritius: 'Mauritius',
+                    UAE: 'United Arab Emirates',
+                    UK: 'United Kingdom',
+                    USA: 'United States of America',
+                }
             },
             methods: {
                 showHomeSection: function() {
@@ -212,6 +300,10 @@
                 showCheckoutSection: function() {
                     this.showCheckout = !this.showCheckout;
                     this.showSort = false;
+                    this.showForm = false;
+                },
+                showFormSection: function() {
+                    this.showForm = !this.showForm;
                 },
                 addToCart: function(subject) {
                     if (subject.availability > 0) {
@@ -274,6 +366,14 @@
                         }
                     }
                 },
+                submitForm: function() {
+                    // Empty the cart
+                    this.cart = [];
+                    // Alert that the order is submited
+                    alert('Order submited!');
+                    // Switch to Home section
+                    this.showCheckout = false;
+                }
             },
             computed: {
                 cartItemCount: function() {
@@ -312,6 +412,18 @@
                     };
 
                     return subjectsArray.sort(compare);
+                },
+                isFormInvalid() {
+                    // Check if any input field is empty or if the cart is empty
+                    return !this.order.firstName || 
+                        !this.order.lastName || 
+                        !this.order.email || 
+                        !this.order.phone || 
+                        !this.order.address || 
+                        !this.order.city || 
+                        !this.order.country || 
+                        !this.order.zip || 
+                        !this.cart.length;
                 }
             }
         })
