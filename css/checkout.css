@@ -236,9 +236,6 @@
 #submitButton:hover {
     background-color: var(--soft-highlight-color);
 }
-#submitButton:disabled {
-    cursor: not-allowed;
-}
 
 /* Billing Information/Overview Container */
 #billing-information {

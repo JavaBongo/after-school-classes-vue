@@ -41,3 +41,6 @@ Now render will have smooth fade or slide transitions.
 - Modified checkout css file.
 ### Commit 11 - Form Validation
 - Modified index file to validate checkout form. Now error will be alerted if any form field contains incorrect type/format of input. If the information is correct, the order will be submited.
+### Commit 12 - Search Functionality
+- Modified index file to have search functionality. Now search input will display subjects with matching title or location. Sort function still works and works even if search querry shows any or some subjects.
+- Fixed anchoring error by placing it in checkout button from previous mistake of sort button.
