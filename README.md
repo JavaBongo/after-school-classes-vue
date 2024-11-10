@@ -24,3 +24,6 @@ Now cart item count shows based on item ordered quantity for each item in the ca
 - Modified index file to show conditional rendering of home, checkout, & sort sections using v-if.
 Now render will have smooth fade or slide transitions.
 - Modified basic css file for transitions.
+### Commit 6 - Modularize Products Data
+- Added javascript folder and subjects.js file inside.
+- Modified index file to now use external subjectList from subjects.js in the data property. Expanded subjects list to 12 subjects as per requirement of the project (minimum 10 subjects).

@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="css/checkout.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+    <!-- Link for Subjects List file -->
+    <script src="javascript/subjects.js"></script>
 </head>
 <body>
     <div id="app">
@@ -109,53 +111,8 @@
                 showSort: false,
                 showCheckout: false,
                 currentView: 'home',
-                subjects: [
-                    {
-                        id: 1000,
-                        title: 'Maths',
-                        location: 'London',
-                        availability: 16,
-                        orderedQuantity: 0,
-                        price: 8,
-                        img: 'assets/Math-Symbol.jpg'
-                    },
-                    {
-                        id: 1001,
-                        title: 'English',
-                        location: 'Dubai',
-                        availability: 8,
-                        orderedQuantity: 0,
-                        price: 16,
-                        img: 'assets/English-Symbol.jpg'
-                    },
-                    {
-                        id: 1002,
-                        title: 'Science',
-                        location: 'Mauritius',
-                        availability: 4,
-                        orderedQuantity: 0,
-                        price: 32,
-                        img: 'assets/Science-Symbol.jpg'
-                    },
-                    {
-                        id: 1003,
-                        title: 'History',
-                        location: 'London',
-                        availability: 2,
-                        orderedQuantity: 0,
-                        price: 64,
-                        img: 'assets/History-Symbol.jpg'
-                    },
-                    {
-                        id: 1004,
-                        title: 'Computer',
-                        location: 'Dubai',
-                        availability: 1,
-                        orderedQuantity: 0,
-                        price: 128,
-                        img: 'assets/Computer-Symbol.jpg'
-                    }
-                ],
+                // External subjects list is now called which contains all the subjects details
+                subjects: subjectList,
                 cart: []
             },
             methods: {
