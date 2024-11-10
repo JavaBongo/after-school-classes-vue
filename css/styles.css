@@ -1,3 +1,141 @@
+/* Font Libraries */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/* Color variables */
+:root {
+    --primary-color: #FFFFFF;
+    --secondary-color: #2D2D2D;
+    --accent-color: #5F5F5F;
+    --text-color: #F5F5DC;
+    --highlight-color: #007BFF;
+    --soft-highlight-color: #0056b3;
+    --second-highlight-color: #DC143C;
+    --soft-second-highlight-color: #8B0000;
+    --shadow-color: #64646F33;
+}
+
+/* Basic tags */
+body {
+    /* Adjusting the body */
+    width: 100vw;
+    padding: 0;
+    margin: 0;
+    background-color: var(--primary-color);
+}
+header {
+    /* Making the header fixed */
+    position: fixed;
+}
+main {
+    /* Adjusting padding gap due to the header */
+    padding: 50px 0;
+}
+figure {
+    text-align: center;
+}
+a {
+    /* Removing default styling of links */
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+/* Navigation Bar section */
+#navigation-bar {
+    width: 100vw;
+    height: 50px;
+    background-color: var(--secondary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.nav-item {
+    height: 45px;
+    border: solid 1px transparent;
+    min-width: 50px;
+    margin: 0 20px 0 0;
+    color: var(--text-color);
+    font-family: "Montserrat";
+    font-size: 10pt;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.nav-logo {
+    width: 30px;
+}
+.nav-button {
+    background-color: transparent;
+    border: none;
+}
+
+/* Search box */
+#search-box {
+    width: 35vw;
+    height: 30px;
+    border-radius: 5px;
+    background-color: var(--accent-color);
+    position: relative;
+    margin: 0 20px 0 0;
+    display: flex;
+    align-items: center; /* Vertically center items */
+    justify-content: start; /* Align icon and input to the left */
+}
+.search-icon {
+    position: absolute;
+    left: 10px;
+    color: var(--secondary-color);
+}
+#search-area {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: transparent;
+    padding-left: 30px;
+    color: var(--primary-color);
+    font-size: 12pt;
+}
+#search-area:focus {
+    /* Removing default blue line when focused */
+    outline-width: 0;
+}
+
+/* Checkout button counter */
+#cart-counter {
+    background-color: var(--text-color);
+    width: auto;
+    min-width: 10px;
+    color: var(--secondary-color);
+}
+
+/* Drop down pop ups */
+.info-box {
+    width: 270px;
+    height: auto;
+    min-height: 130px;
+    border: 1px solid var(--accent-color);
+    border-radius: 15px;
+    background-color: rgba(45, 45, 45, 0.85); /* A dark gray with some transparency */
+    backdrop-filter: blur(10px); /* Adds the blur effect */
+    -webkit-backdrop-filter: blur(10px);
+    padding: 10px 30px;
+    color: var(--primary-color);
+    font-family: 'Montserrat';
+    font-size: 10pt;
+}
+.info-box > * {
+    display: inline-block;
+}
+#school-info {
+    margin-left: 0vw;
+}
+#information {
+    margin-left: 12vw;
+}
+#contact-info {
+    margin-left: 25vw;
+}
+
+/* Subjects section */
 .subject-card {
     border: 1px solid black; 
     width: 200px; 

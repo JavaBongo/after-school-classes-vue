@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta Data -->
+    <!-- meta data -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="The Middlesex School - After school classes website offers various lessons that students or parents on behalf of their children can choose from, to gain help in any subject.">
     <meta name="keywords" content="After School Classes, Help Classes, The Middlesex School">
     <meta name="author" content="Muhammad Rushaan Abbas">
-    <!-- Site Title -->
+    <!-- Site Icon & Title -->
     <title>The Middlesex School</title>
+    <link rel="icon" type="image/png" href="assets/the-mdx-school.png">
     <!-- Links -->
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
@@ -17,14 +18,39 @@
 <body>
     <div id="app">
         <header>
-            <!-- Site Title -->
-            <h1>{{sitename}}</h1>
-            <!-- Cart button -->
-            <button>
-                <i class="fas fa-cart-plus"></i>
-                Cart
-                {{cartItemCount}}
-            </button>
+            <!-- Navigation Bar -->
+            <section id="navigation-bar">
+                <!-- School Logo -->
+                <figure @mouseover="showSchool = true" @mouseleave="showSchool = false" class="nav-item">
+                    <img v-bind:src="school.logo" class="nav-logo">
+                </figure>
+                <!-- School Info -->
+                <p @mouseover="showInfo = true" @mouseleave="showInfo = false" class="nav-item">INFO</p>
+                <!-- School Contact -->
+                <p @mouseover="showContact = true" @mouseleave="showContact = false" class="nav-item">CONTACT</p>
+                <!-- Search Box -->
+                <div id="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" name="search" id="search-area">
+                </div>
+                <!-- Sort Button -->
+                <button class="nav-item nav-button">SORT</button>
+                <!-- Checkout Button -->
+                <button class="nav-item nav-button">CHECKOUT&nbsp;<i class="fa-solid fa-cart-shopping"></i>&nbsp;<div id="cart-counter">{{cartItemCount}}</div></button>
+            </section>
+            <!-- Drop down pop ups -->
+            <div @mouseover="showSchool = true" @mouseleave="showSchool = false" id="school-info" v-show="showSchool" class="info-box">
+                <figure class="nav-item">
+                    <img v-bind:src="school.logo" style="width: 50px;">
+                </figure>
+                <h1>{{school.sitename}}</h1><h2>by Rushaan</h2>
+            </div>
+            <div @mouseover="showInfo = true" @mouseleave="showInfo = false" id="information" v-show="showInfo" class="info-box">
+                <p>This web app allows students and</p><br><p>parents to explore and purchase after-</p><br><p>school classes and activities. Users can</p><br><p>browse lessons by subject, location,</p><br><p>price, and availability. The app offers an</p><br><p>intuitive shopping cart and checkout</p><br><p>experience for easy enrollment.</p>
+            </div>
+            <div @mouseover="showContact = true" @mouseleave="showContact = false" id="contact-info" v-show="showContact" class="info-box">
+                <p>Our Hotline is <a href="tel:+123456789">+1 234 56789</a>,</p><br><p>For SMS <a href="sms:123">"123"</a>,</p><br><p>Or Email Us at <a href="mailto:someone@example.com">someone@example.com</a></p>
+            </div>
         </header>
         <main>
             <!-- Subject Box -->
@@ -36,10 +62,16 @@
                 <h2 v-text="subject.title"></h2>
                 <p v-text="subject.location"></p>
                 <!-- Subject availability -->
-                <p>{{subject.availability}} seats available</p>
+                <p v-if="availableStock > 0">{{availableStock}} seats available</p>
+                <!-- Out of stock when 0 availability -->
+                <p v-else style="color: red;">No seats available</p>
                 <p>${{subject.price}}</p>
                 <!-- Button to add subject to cart -->
-                <button v-on:click="addToCart">ADD TO CART</button>
+                <button v-on:click="addToCart" v-if="canAddToCart">ADD TO CART</button>
+                <!-- Disabled button -->
+                <button disabled v-else>
+                    Out of Stock
+                </button>
             </div>
         </main>
     </div>
@@ -47,7 +79,13 @@
         let app = new Vue({
             el: '#app',
             data: {
-                sitename: 'The Middlesex School - After School Classes',
+                school: {
+                    sitename: 'The Middlesex School',
+                    logo: 'assets/the-mdx-school.png'
+                },
+                showSchool: false,
+                showInfo: false,
+                showContact: false,
                 subject: {
                     id: 1000,
                     title: 'Maths',
@@ -69,6 +107,13 @@
                     // Counter for subjects in cart
                     return this.cart.length || "";
                 },
+                canAddToCart: function() {
+                    return this.availableStock > 0;
+                },
+                availableStock: function() {
+                    // Calculate available stock by subtracting items in cart
+                    return this.subject.availability - this.cart.length;
+                }
             }
         })
     </script>
