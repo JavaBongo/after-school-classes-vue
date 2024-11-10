@@ -11,7 +11,9 @@
     <title>The Middlesex School</title>
     <link rel="icon" type="image/png" href="assets/the-mdx-school.png">
     <!-- Links -->
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/basic.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/subject-section.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
 </head>
@@ -53,26 +55,27 @@
             </div>
         </header>
         <main>
-            <!-- Subject Box -->
-            <div class="subject-card">
-                <!-- Subject Icon -->
-                <figure>
-                    <img v-bind:src="subject.img" style="width: 100px;">
-                </figure>
-                <h2 v-text="subject.title"></h2>
-                <p v-text="subject.location"></p>
-                <!-- Subject availability -->
-                <p v-if="availableStock > 0">{{availableStock}} seats available</p>
-                <!-- Out of stock when 0 availability -->
-                <p v-else style="color: red;">No seats available</p>
-                <p>${{subject.price}}</p>
-                <!-- Button to add subject to cart -->
-                <button v-on:click="addToCart" v-if="canAddToCart">ADD TO CART</button>
-                <!-- Disabled button -->
-                <button disabled v-else>
-                    Out of Stock
-                </button>
-            </div>
+            <!-- Subjects Section -->
+            <section id="subject-section">
+                <!-- Subject Box -->
+                <div v-for="subject in subjects" :key="subject.id" class="subject-card">
+                    <!-- Subject Icon -->
+                    <figure>
+                        <img v-bind:src="subject.img" class="subject-img">
+                    </figure>
+                    <h2 class="subject-item">{{ subject.title }}</h2>
+                    <p class="subject-item subject-location">{{ subject.location }}</p>
+                    <!-- Subject availablilty -->
+                    <p v-if="subject.availability > 1" class="subject-item subject-avail">{{ subject.availability }} seats available</p>
+                    <!-- Else if only 1 available seat -->
+                    <p v-else-if="subject.availability == 1" class="subject-item subject-avail">{{ subject.availability }} seat available</p>
+                    <!-- Else no seats available -->
+                    <p v-else class="subject-item subject-avail">No seats available</p>
+                    <p class="subject-item subject-price">${{ subject.price }}</p>
+                    <button v-on:click="addToCart(subject)" v-if="subject.availability > 0" class="add-button">ADD TO CART</button>
+                    <button disabled v-else class="add-button">NO SEATS AVAILABLE</button>
+                </div>
+            </section>
         </main>
     </div>
     <script type="text/javascript">
@@ -86,34 +89,84 @@
                 showSchool: false,
                 showInfo: false,
                 showContact: false,
-                subject: {
-                    id: 1000,
-                    title: 'Maths',
-                    location: 'London',
-                    availability: 10,
-                    price: 20,
-                    img: 'assets/Math-Symbol.jpg'
-                },
+                subjects: [
+                    {
+                        id: 1000,
+                        title: 'Maths',
+                        location: 'London',
+                        availability: 16,
+                        orderedQuantity: 0,
+                        price: 8,
+                        img: 'assets/Math-Symbol.jpg'
+                    },
+                    {
+                        id: 1001,
+                        title: 'English',
+                        location: 'Dubai',
+                        availability: 8,
+                        orderedQuantity: 0,
+                        price: 16,
+                        img: 'assets/English-Symbol.jpg'
+                    },
+                    {
+                        id: 1002,
+                        title: 'Science',
+                        location: 'Mauritius',
+                        availability: 4,
+                        orderedQuantity: 0,
+                        price: 32,
+                        img: 'assets/Science-Symbol.jpg'
+                    },
+                    {
+                        id: 1003,
+                        title: 'History',
+                        location: 'London',
+                        availability: 2,
+                        orderedQuantity: 0,
+                        price: 64,
+                        img: 'assets/History-Symbol.jpg'
+                    },
+                    {
+                        id: 1004,
+                        title: 'Computer',
+                        location: 'Dubai',
+                        availability: 1,
+                        orderedQuantity: 0,
+                        price: 128,
+                        img: 'assets/Computer-Symbol.jpg'
+                    }
+                ],
                 cart: []
             },
             methods: {
-                addToCart: function() {
-                    // Pushing the subject id in to cart
-                    this.cart.push(this.subject.id);
+                addToCart: function(subject) {
+                    if (subject.availability > 0) {
+                        // Check if the subject is already in the cart
+                        const cartItem = this.cart.find(id => id === subject.id);
+                        
+                        if (cartItem) {
+                            // If the subject is already in the cart, increment orderedQuantity
+                            const existingsubject = this.subjects.find(p => p.id === subject.id);
+                            existingsubject.orderedQuantity++;
+                        } else {
+                            // If it's a new subject, add to cart and increment orderedQuantity
+                            this.cart.push(subject.id);
+                            subject.orderedQuantity++;
+                        }
+
+                        // Decrease availability in both cases
+                        subject.availability--;
+                    }
                 },
             },
             computed: {
                 cartItemCount: function() {
-                    // Counter for subjects in cart
-                    return this.cart.length || "";
+                    // Sum the orderedQuantity for each product in the cart
+                    return this.cart.reduce((total, id) => {
+                        const subject = this.subjects.find(s => s.id === id);
+                        return total + (subject ? subject.orderedQuantity : 0);
+                    }, 0) || "";
                 },
-                canAddToCart: function() {
-                    return this.availableStock > 0;
-                },
-                availableStock: function() {
-                    // Calculate available stock by subtracting items in cart
-                    return this.subject.availability - this.cart.length;
-                }
             }
         })
     </script>

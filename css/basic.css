@@ -1,0 +1,40 @@
+/* Font Libraries */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/* Color variables */
+:root {
+    --primary-color: #FFFFFF;
+    --secondary-color: #2D2D2D;
+    --accent-color: #5F5F5F;
+    --text-color: #F5F5DC;
+    --highlight-color: #007BFF;
+    --soft-highlight-color: #0056b3;
+    --second-highlight-color: #DC143C;
+    --soft-second-highlight-color: #8B0000;
+    --shadow-color: #64646F33;
+}
+
+/* Basic tags */
+body {
+    /* Adjusting the body */
+    width: 100vw;
+    padding: 0;
+    margin: 0;
+    background-color: var(--primary-color);
+}
+header {
+    /* Making the header fixed */
+    position: fixed;
+}
+main {
+    /* Adjusting padding gap due to the header */
+    padding: 50px 0;
+}
+figure {
+    text-align: center;
+}
+a {
+    /* Removing default styling of links */
+    text-decoration: none;
+    color: var(--text-color);
+}
