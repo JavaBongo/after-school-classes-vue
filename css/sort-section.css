@@ -11,3 +11,34 @@
     font-family: 'Montserrat';
     font-size: 12pt;
 }
+
+/* Sort Tags */
+.sort-tag {
+    background-color: var(--highlight-color);
+    width: 100px;
+    height: 30px;
+    border: none;
+    color: var(--primary-color);
+    text-align: center;
+    font-family: 'Montserrat';
+    cursor: pointer;
+}
+.sort-tag:hover {
+    background-color: var(--soft-highlight-color);
+}
+.sort-tag.active {
+    background-color: var(--soft-highlight-color);
+}
+
+/* Sort Button */
+.sort-button {
+    background-color: var(--secondary-color);
+    width: 30px;
+    height: 30px;
+    border: none;
+    color: var(--primary-color);
+    font-size: 12pt;
+}
+.sort-button:hover {
+    background-color: var(--accent-color);
+}

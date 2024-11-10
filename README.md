@@ -27,3 +27,5 @@ Now render will have smooth fade or slide transitions.
 ### Commit 6 - Modularize Products Data
 - Added javascript folder and subjects.js file inside.
 - Modified index file to now use external subjectList from subjects.js in the data property. Expanded subjects list to 12 subjects as per requirement of the project (minimum 10 subjects).
+### Commit 7 - Sorting Setup
+- Modified index file to have sort functionality. Now subjects get sorted by title, location, availability, & price. Sort direction can be DESC to ASC or ASC to DESC. Default sort is set for title of the subjects.
