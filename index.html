@@ -122,7 +122,58 @@
             </div>
             <!-- Else show the checkout contents -->
             <div v-else key="checkout">
-                <h2 class="title">Your Cart <i class="fa-solid fa-cart-shopping"></i></h2>
+                <!-- Cart Section -->
+                <section id="cart-section">
+                    <!-- Cart Section Title -->
+                    <h2 class="title">Your Cart <i class="fa-solid fa-cart-shopping"></i></h2>
+                    <!-- Cart Items Container -->
+                    <div id="cart-items-container">
+                        <!-- Cart Items: Looping all cart items to show cart products -->
+                        <div v-for="item in cartItems" :key="item.id" class="cart-product">
+                            <!-- Cart Product Icon -->
+                            <figure class="cart-product-figure">
+                                <img :src="item.img" class="cart-product-img" alt="Product image">
+                            </figure>
+                            <!-- Cart Product Information -->
+                            <div class="cart-product-info">
+                                <!-- Cart Product Title & Location -->
+                                <h2 class="cart-product-title">{{ item.title }}</h2>
+                                <p class="cart-product-location">{{ item.location }}</p>
+                                <!-- Quantity Controls -->
+                                 <div class="cart-product-subsection">
+                                    <p class="qty">Qty: </p>
+                                    <div class="cart-product-quantity">
+                                        <!-- Quantity Subtract Button -->
+                                        <button v-on:click="subtractFromCart(item)" class="quantity-button">-</button>
+                                        <!-- Cart Product Quantity Counter -->
+                                        <p class="cart-product-count">{{ item.orderedQuantity }}</p>
+                                        <!-- Quantity Addition Button -->
+                                        <button v-on:click="addToCart(item)" class="quantity-button">+</button>
+                                    </div>
+                                    <!-- Cart Product Price -->
+                                    <p class="cart-product-rate">${{ item.price }}.00</p>
+                                </div>
+                                <!-- Remove Cart Product -->
+                                <p v-on:click="removeFromCart(item)" class="remove">Remove {{ item.title }}</p>
+                            </div>
+                            <div>
+                                <!-- Total Product Price = item price * item ordered quantity -->
+                                <p class="cart-product-price">${{ item.price * item.orderedQuantity }}.00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Price Overview Container -->
+                    <div id="price-overview">
+                        <h3 class="title">Price Overview</h3>
+                        <hr class="po-line">
+                        <span class="po-span"><p class="po-text">SUBTOTAL</p><p class="price-text">${{ cartSubtotal.toFixed(2) }}</p></span>
+                        <span class="po-span"><p class="po-text">TAX</p><p class="price-text">$0.00</p></span>
+                        <!-- Total cost of all cart products -->
+                        <span class="po-span-2"><p class="po-text">TOTAL</p><p class="price-text">${{ cartSubtotal.toFixed(2)}}</p></span>
+                        <!-- Proceed to Checkout Form Button -->
+                        <a href="#checkout-form"><button id="ptcButton" disabled>PROCEED TO CHECKOUT</button></a>
+                    </div>
+                </section>
             </div>
             </transition>
         </main>
@@ -183,7 +234,46 @@
                 },
                 applySort: function() {
                     this.sort.direction = !this.sort.direction;
-                }
+                },
+                subtractFromCart: function(product) {
+                    if (product.orderedQuantity > 0) {
+                        product.orderedQuantity--;
+                        product.availability++;
+                        // If the orderedQuantity reaches zero, remove the product from the cart
+                        if (product.orderedQuantity === 0) {
+                            const index = this.cart.indexOf(product.id);
+                            if (index !== -1) {
+                                this.cart.splice(index, 1); // Remove the product from the cart
+                            }
+                        }
+                        // Change back to product section if no items in the car
+                        if(!this.cart.length) {
+                            this.showForm = false;
+                            this.showCheckout = false;
+                            this.showSort = false
+                        }
+                    }
+                },
+                removeFromCart: function(product) {
+                    const index = this.cart.indexOf(product.id);
+                    if (index !== -1) {
+                        // Restore the availability
+                        product.availability += product.orderedQuantity;
+
+                        // Reset orderedQuantity
+                        product.orderedQuantity = 0;
+
+                        // Remove the product from the cart
+                        this.cart.splice(index, 1);
+
+                        // Change back to product section if no items in the car
+                        if(!this.cart.length) {
+                            this.showForm = false;
+                            this.showCheckout = false;
+                            this.showSort = false
+                        }
+                    }
+                },
             },
             computed: {
                 cartItemCount: function() {
@@ -192,6 +282,19 @@
                         const subject = this.subjects.find(s => s.id === id);
                         return total + (subject ? subject.orderedQuantity : 0);
                     }, 0) || "";
+                },
+                cartItems() {
+                    // Map product IDs in the cart to their full product details
+                    return this.cart.map(id => {
+                        return this.subjects.find(subject => subject.id === id);
+                    });
+                },
+                cartSubtotal() {
+                    // Calculate the total price for all items in the cart
+                    return this.cart.reduce((total, id) => {
+                        const subject = this.subjects.find(s => s.id === id);
+                        return total + (subject ? subject.price * subject.orderedQuantity : 0);
+                    }, 0);
                 },
                 sortedProducts() {
                     let subjectsArray = this.subjects.slice(0);

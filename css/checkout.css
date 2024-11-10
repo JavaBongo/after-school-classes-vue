@@ -1,6 +1,143 @@
+/* Cart Section */
+#cart-section {
+    width: 100vw;
+    height: auto;
+    margin: 0 0 30px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 .title {
     width: 90%;
     font-family: 'Montserrat';
     margin: 15px auto;
     text-align: center;
+}
+/* Cart Product Card */
+.cart-product {
+    width: 50vw;
+    border: none;
+    border-bottom: 1px solid var(--accent-color);
+    display: flex;
+    justify-content: space-evenly;
+    font-family: 'Poppins';
+    padding: 10px 0;
+}
+/* Cart Product Data: Icon, Title, Location */
+.cart-product-figure {
+    margin: auto 0;
+}
+.cart-product-info {
+    width: 55%;
+}
+.cart-product-img {
+    width: 200px;
+    margin: 0;
+}
+.cart-product-title {
+    margin: 16px 0 0 0;
+}
+.cart-product-location {
+    margin: 0;
+}
+/* Subsection */
+.cart-product-subsection {
+    width: 175px;
+    margin: 10px 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+/* Quantity Section */
+.cart-product-quantity {
+    max-width: 75px;
+    height: 25px;
+    display: flex;
+    justify-content: space-between;
+}
+/* Cart Product Count */
+.cart-product-count {
+    width: 25px;
+    height: 25px;
+    margin: 0;
+    text-align: center;
+}
+/* Cart Product Rate */
+.cart-product-rate {
+    margin: 0;
+    color: var(--accent-color);
+}
+.cart-product-price {
+    text-align: end;
+}
+.qty {
+    margin: 0;
+}
+/* Remove Cart Product */
+.remove {
+    color: var(--highlight-color);
+    font-size: 8pt;
+    margin: 10px 0 0 0;
+    cursor: pointer;
+}
+/* Quantity Button: + - */
+.quantity-button {
+    width: 25px;
+    height: 25px;
+    background-color: var(--secondary-color);
+    border: none;
+    border-radius: 100%;
+    color: var(--text-color);
+}
+.quantity-button:hover {background-color: var(--accent-color);}
+.quantity-button::after {background-color: var(--shadow-color);}
+
+/* Price Overview Container */
+#price-overview {
+    width: 300px;
+    height: 275px;
+    margin: 0 0 0 30px;
+    background-color: var(--primary-color);
+    border: 1px solid var(--accent-color);
+    padding: auto;
+}
+.po-line {
+    width: 90%;
+    background-color: var(--accent-color);
+}
+/* Span Elements */
+.po-span, .po-span-2 {
+    width: 90%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    font-size: 10pt;
+}
+.po-span-2 {
+    font-weight: 700;
+    font-size: 12pt;
+}
+/* Text Elements */
+.po-text {
+    color: var(--secondary-color);
+}
+.price-text {
+    color: var(--accent-color);
+}
+/* Proceed to Checkout Form Button */
+#ptcButton {
+    width: 90%;
+    height: 50px;
+    margin: auto;
+    display: block;
+    border: none;
+    background-color: var(--highlight-color);
+    color: var(--primary-color);
+    font-family: 'Montserrat';
+    cursor: pointer;
+}
+#ptcButton:hover {
+    background-color: var(--soft-highlight-color);
 }
