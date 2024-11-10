@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Data -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The Middlesex School - After school classes website offers various lessons that students or parents on behalf of their children can choose from, to gain help in any subject.">
+    <meta name="keywords" content="After School Classes, Help Classes, The Middlesex School">
+    <meta name="author" content="Muhammad Rushaan Abbas">
+    <!-- Site Title -->
+    <title>The Middlesex School</title>
+    <!-- Links -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>{{sitename}}</h1>
+        </header>
+        <main>
+            <p>List of subjects</p>
+            <ul>
+                <li v-for="subject in subjects" v-text="subject"></li>
+            </ul>
+        </main>
+    </div>
+    <script type="text/javascript">
+        let app = new Vue({
+            el: '#app',
+            data: {
+                sitename: 'The Middlesex School - After School Classes',
+                subjects: ['Maths','English','Science','History','Computer','Art','Music','Physical Education','Drama','Geography']
+            }
+        })
+    </script>
+</body>
+</html>
