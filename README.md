@@ -34,5 +34,8 @@ Now render will have smooth fade or slide transitions.
 - Modified index file to show cart items and price overview in the checkout section. Now item ordered quantity can be modified in the cart section. Total price is calculated by using ordered quantity of each product x price of each product.
 - Modified checkout css file.
 ### Commit 9 - Checkout Form
-- Modified index file to show simple checkout form.
-- Modified checkout css file
+- Modified index file to show simple checkout form and uses v-model to store information in order object inside the data property.
+- Modified checkout css file.
+### Commit 10 - Bill Overview
+- Modified index file to show bill overview. The overview displays order details from the order object inside the data property.
+- Modified checkout css file.

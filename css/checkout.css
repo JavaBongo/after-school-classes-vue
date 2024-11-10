@@ -144,19 +144,21 @@
 
 /* Checkout Section */
 #checkout-section {
-    width: 75vw;
+    width: 90vw;
     height: auto;
     margin: auto;
     border: 1px solid var(--accent-color);
-    border-radius: 30px;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
     display: flex;
 }
 /* Checkout Form Container */
 #checkout-form {
-    width: 100%;
+    width: 75%;
     height: auto;
     background-color: var(--secondary-color);
-    border-radius: 30px;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
     padding: auto;
     display: flex;
     flex-wrap: wrap;
@@ -236,4 +238,52 @@
 }
 #submitButton:disabled {
     cursor: not-allowed;
+}
+
+/* Billing Information/Overview Container */
+#billing-information {
+    width: 25%;
+    height: auto;
+    font-family: monospace;
+}
+#billing-information > h4 {
+    width: 90%;
+    margin: auto;
+    text-align: center;
+}
+.receipt-figure {
+    width: 50%;
+    margin: 5px auto;
+}
+.receipt-img {
+    width: 50%;
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+}
+hr.receipt-line {
+    width: 90%;
+    border-top: 1px dashed black;
+}
+.receipt-span {
+    width: 90%;
+    height: auto;
+    margin: 5px auto;
+    display: flex;
+    justify-content: space-between;
+}
+.bill-label .bill-label-item {
+    max-width: 25%;
+    margin: 0;
+    font-weight: 600;
+}
+.bill-label-item {
+    max-width: 75%;
+}
+.bill-answer .bill-answer-price {
+    margin: 0;
+    max-width: 75%;
+    text-align: right;
+}
+.bill-answer-price {
+    max-height: 25%;
 }

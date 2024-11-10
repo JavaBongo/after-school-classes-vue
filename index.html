@@ -162,7 +162,7 @@
                             </div>
                             <div>
                                 <!-- Total Product Price = item price * item ordered quantity -->
-                                <p class="cart-product-price">${{ item.price * item.orderedQuantity }}.00</p>
+                                <p class="cart-product-price">${{ (item.price * item.orderedQuantity).toFixed(2) }}</p>
                             </div>
                         </div>
                     </div>
@@ -232,7 +232,34 @@
                         <!-- Place Order Button -->
                         <button id="submitButton" v-on:click="submitForm" :disabled="isFormInvalid">Place Order</button>
                     </div>
-                    </section>
+                    <!-- Billing Information/Overview Section -->
+                    <div id="billing-information">
+                        <figure class="receipt-figure">
+                            <img v-bind:src="school.logo" class="receipt-img">
+                        </figure>
+                        <h4>{{school.name}}</h4>
+                        <h4>Bill Overview</h4>
+                        <hr class="receipt-line">
+                        <!-- Order Details -->
+                        <span class="receipt-span"><p class="bill-label">Name: </p><p class="bill-answer">{{ order.firstName }} {{ order.lastName }}</p></span>
+                        <span class="receipt-span"><p class="bill-label">Email: </p><p class="bill-answer">{{ order.email }}</p></span>
+                        <span class="receipt-span"><p class="bill-label">Tell: </p><p class="bill-answer">{{ order.phone }}</p></span>
+                        <span class="receipt-span"><p class="bill-label">Address: </p><p class="bill-answer">{{ order.address }}, {{ order.city }}, {{ order.country }}</p></span>
+                        <span class="receipt-span"><p class="bill-label">Zip: </p><p class="bill-answer">{{ order.zip }}</p></span>
+                        <span class="receipt-span"><p class="bill-label">Promos: </p><p class="bill-answer">{{ order.promotion }}</p></span>
+                        <span class="receipt-span"><p class="bill-label">Method: </p><p class="bill-answer">{{ order.method }}</p></span>
+                        <hr class="receipt-line">
+                        <!-- Order Items x Quantity & Price -->
+                        <span class="receipt-span"><p class="bill-label-item">Product:</p><p class="bill-answer-price">Amount</p></span>
+                        <span v-for="item in cartItems" :key="item.id" class="receipt-span">
+                            <p class="bill-label-item">{{ item.title }} x{{item.orderedQuantity}}</p>
+                            <p class="bill-answer-price">${{ (item.price * item.orderedQuantity).toFixed(2) }}</p>
+                        </span>
+                        <!-- Order Total Cost -->
+                        <hr class="receipt-line">
+                        <span class="receipt-span"><p class="bill-label">Total:</p><p class="bill-answer">${{ cartSubtotal.toFixed(2)}}</p></span>
+                    </div>
+                </section>
                 </transition>
             </div>
             </transition>

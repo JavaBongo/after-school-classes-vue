@@ -53,3 +53,6 @@
 .add-button:hover {
     background-color: var(--accent-color);
 }
+.add-button:disabled {
+    cursor: not-allowed;
+}

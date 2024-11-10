@@ -13,7 +13,10 @@
     --soft-second-highlight-color: #8B0000;
     --shadow-color: #64646F33;
 }
-
+/* Smooth Scrolling applied to all and especially Home, Checkout & Form */
+html {
+    scroll-behavior: smooth;
+}
 /* Basic tags */
 body {
     /* Adjusting the body */
