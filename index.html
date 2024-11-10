@@ -14,7 +14,9 @@
     <link rel="stylesheet" href="css/basic.css">
     <link rel="stylesheet" href="css/navigation.css">
     <link rel="stylesheet" href="css/subject-section.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="css/sort-section.css">
+    <link rel="stylesheet" href="css/checkout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
 </head>
 <body>
@@ -23,7 +25,7 @@
             <!-- Navigation Bar -->
             <section id="navigation-bar">
                 <!-- School Logo -->
-                <figure @mouseover="showSchool = true" @mouseleave="showSchool = false" class="nav-item">
+                <figure @mouseover="showSchool = true" @mouseleave="showSchool = false" v-on:click="showHomeSection()" class="nav-item">
                     <img v-bind:src="school.logo" class="nav-logo">
                 </figure>
                 <!-- School Info -->
@@ -36,9 +38,9 @@
                     <input type="text" name="search" id="search-area">
                 </div>
                 <!-- Sort Button -->
-                <button class="nav-item nav-button">SORT</button>
+                <button v-on:click="showSortSection()" class="nav-item nav-button">SORT</button>
                 <!-- Checkout Button -->
-                <button class="nav-item nav-button">CHECKOUT&nbsp;<i class="fa-solid fa-cart-shopping"></i>&nbsp;<div id="cart-counter">{{cartItemCount}}</div></button>
+                <button v-on:click="showCheckoutSection()" class="nav-item nav-button">CHECKOUT&nbsp;<i class="fa-solid fa-cart-shopping"></i>&nbsp;<div id="cart-counter">{{cartItemCount}}</div></button>
             </section>
             <!-- Drop down pop ups -->
             <div @mouseover="showSchool = true" @mouseleave="showSchool = false" id="school-info" v-show="showSchool" class="info-box">
@@ -55,27 +57,42 @@
             </div>
         </header>
         <main>
-            <!-- Subjects Section -->
-            <section id="subject-section">
-                <!-- Subject Box -->
-                <div v-for="subject in subjects" :key="subject.id" class="subject-card">
-                    <!-- Subject Icon -->
-                    <figure>
-                        <img v-bind:src="subject.img" class="subject-img">
-                    </figure>
-                    <h2 class="subject-item">{{ subject.title }}</h2>
-                    <p class="subject-item subject-location">{{ subject.location }}</p>
-                    <!-- Subject availablilty -->
-                    <p v-if="subject.availability > 1" class="subject-item subject-avail">{{ subject.availability }} seats available</p>
-                    <!-- Else if only 1 available seat -->
-                    <p v-else-if="subject.availability == 1" class="subject-item subject-avail">{{ subject.availability }} seat available</p>
-                    <!-- Else no seats available -->
-                    <p v-else class="subject-item subject-avail">No seats available</p>
-                    <p class="subject-item subject-price">${{ subject.price }}</p>
-                    <button v-on:click="addToCart(subject)" v-if="subject.availability > 0" class="add-button">ADD TO CART</button>
-                    <button disabled v-else class="add-button">NO SEATS AVAILABLE</button>
-                </div>
-            </section>
+            <!-- Show the home contents containing sort & subjects sections -->
+            <transition name="fade" mode="out-in">
+            <div v-if="!showCheckout" key="home">
+                <!-- Sort Section -->
+                <transition name="slide">
+                <section id="sort-section" v-if="showSort" key="sort">
+                    <h3><i class="fas fa-filter"></i> Sort</h3>
+                </section>
+                </transition>
+                <!-- Subjects Section -->
+                <section id="subject-section">
+                    <!-- Subject Box -->
+                    <div v-for="subject in subjects" :key="subject.id" class="subject-card">
+                        <!-- Subject Icon -->
+                        <figure>
+                            <img v-bind:src="subject.img" class="subject-img">
+                        </figure>
+                        <h2 class="subject-item">{{ subject.title }}</h2>
+                        <p class="subject-item subject-location">{{ subject.location }}</p>
+                        <!-- Subject availablilty -->
+                        <p v-if="subject.availability > 1" class="subject-item subject-avail">{{ subject.availability }} seats available</p>
+                        <!-- Else if only 1 available seat -->
+                        <p v-else-if="subject.availability == 1" class="subject-item subject-avail">{{ subject.availability }} seat available</p>
+                        <!-- Else no seats available -->
+                        <p v-else class="subject-item subject-avail">No seats available</p>
+                        <p class="subject-item subject-price">${{ subject.price }}</p>
+                        <button v-on:click="addToCart(subject)" v-if="subject.availability > 0" class="add-button">ADD TO CART</button>
+                        <button disabled v-else class="add-button">NO SEATS AVAILABLE</button>
+                    </div>
+                </section>
+            </div>
+            <!-- Else show the checkout contents -->
+            <div v-else key="checkout">
+                <h2 class="title">Your Cart <i class="fa-solid fa-cart-shopping"></i></h2>
+            </div>
+            </transition>
         </main>
     </div>
     <script type="text/javascript">
@@ -89,6 +106,9 @@
                 showSchool: false,
                 showInfo: false,
                 showContact: false,
+                showSort: false,
+                showCheckout: false,
+                currentView: 'home',
                 subjects: [
                     {
                         id: 1000,
@@ -139,6 +159,18 @@
                 cart: []
             },
             methods: {
+                showHomeSection: function() {
+                    this.showCheckout = false;
+                    this.showSort = false;
+                },
+                showSortSection: function() {
+                    this.showSort = !this.showSort;
+                    this.showCheckout = false;
+                },
+                showCheckoutSection: function() {
+                    this.showCheckout = !this.showCheckout;
+                    this.showSort = false;
+                },
                 addToCart: function(subject) {
                     if (subject.availability > 0) {
                         // Check if the subject is already in the cart

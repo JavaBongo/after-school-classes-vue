@@ -1,0 +1,13 @@
+/* Sort Section */
+#sort-section {
+    width: 90vw;
+    margin: 20px auto;
+    background-color: var(--primary-color);
+    display: flex;
+    justify-content: space-between;
+}
+#sort-section h3 {
+    color: var(--secondary-color);
+    font-family: 'Montserrat';
+    font-size: 12pt;
+}

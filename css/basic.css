@@ -38,3 +38,23 @@ a {
     text-decoration: none;
     color: var(--text-color);
 }
+
+/* Transition Elements */
+.fade-enter-active, .fade-leave-active {
+    /* Fade In */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.fade-enter, .fade-leave-to {
+    /* Fade Out */
+    opacity: 0;
+    transform: translateY(-10px);
+}
+.slide-enter-active, .slide-leave-active {
+    /* Slide In */
+    transition: all 0.3s ease;
+}
+.slide-enter, .slide-leave-to {
+    /* Slide Out */
+    opacity: 0;
+    transform: translateY(-20px);
+}
