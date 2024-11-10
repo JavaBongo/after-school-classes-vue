@@ -46,7 +46,7 @@
                 <button v-on:click="showSortSection()" class="nav-item nav-button">SORT</button>
                 </a>
                 <!-- Checkout Button -->
-                <button v-on:click="showCheckoutSection()" class="nav-item nav-button">CHECKOUT&nbsp;<i class="fa-solid fa-cart-shopping"></i>&nbsp;<div id="cart-counter">{{cartItemCount}}</div></button>
+                <button v-if="cartItemCount > 0" v-on:click="showCheckoutSection()" class="nav-item nav-button">CHECKOUT&nbsp;<i class="fa-solid fa-cart-shopping"></i>&nbsp;<div id="cart-counter">{{cartItemCount}}</div></button>
             </section>
             <!-- Drop down pop ups -->
             <div @mouseover="showSchool = true" @mouseleave="showSchool = false" id="school-info" v-show="showSchool" class="info-box">
@@ -105,7 +105,7 @@
                 <!-- Subjects Section -->
                 <section id="subject-section">
                     <!-- Subject Box -->
-                    <div v-for="subject in sortedProducts" :key="subject.id" class="subject-card">
+                    <div v-for="subject in sortedArray" :key="subject.id" class="subject-card">
                         <!-- Subject Icon -->
                         <figure>
                             <img v-bind:src="subject.img" class="subject-img">
@@ -190,19 +190,19 @@
                             <p class="form-section-title">Personal Information</p>
                             <hr class="form-line">
                         </span>
-                        <input v-model.trim="order.firstName" type="text" placeholder="First Name" class="form-input" required>
-                        <input v-model.trim="order.lastName" type="text" placeholder="Last Name" class="form-input" required>
+                        <input v-model.trim="order.firstName" type="text" pattern="^[a-zA-Z\s]+$" placeholder="First Name" class="form-input" required>
+                        <input v-model.trim="order.lastName" type="text" pattern="^[a-zA-Z\s]+$" placeholder="Last Name" class="form-input" required>
                         <input v-model.trim="order.email" type="email" placeholder="Email Address" class="form-input" required>
-                        <input v-model.number="order.phone" type="tel" placeholder="Phone Number" class="form-input" required>
+                        <input v-model="order.phone" type="tel" pattern="^[\+\(\)\-\s0-9]+$" placeholder="Phone Number" class="form-input" required>
                         <!-- Address Fields -->
                         <span class="form-span">
                             <hr class="form-line">
                             <p class="form-section-title">Billing Address</p>
                             <hr class="form-line">
                         </span>
-                        <input v-model.trim="order.address" type="text" placeholder="Address" class="form-input" required>
+                        <input v-model.trim="order.address" type="text" maxlength="15" placeholder="Address" class="form-input" required>
                         <input v-model.trim="order.city" type="text" placeholder="City" class="form-input" required>
-                        <input v-model.trim="order.zip" type="text" placeholder="Zip or Postal Code" class="form-input" required>
+                        <input v-model.trim="order.zip" type="text" pattern="^\d{5}(-\d{4})?$" placeholder="Zip or Postal Code" class="form-input" required>
                         <select v-model="order.country" class="form-input" required>
                             <option disabled value="">Country</option>
                             <option v-for="(country, key) in countries"
@@ -230,7 +230,7 @@
                             <label for="business">Phone</label>
                         </span>
                         <!-- Place Order Button -->
-                        <button id="submitButton" v-on:click="submitForm" :disabled="isFormInvalid">Place Order</button>
+                        <button id="submitButton" v-if="!isFormInvalid" v-on:click="validateAndSubmitForm">Place Order</button>
                     </div>
                     <!-- Billing Information/Overview Section -->
                     <div id="billing-information">
@@ -313,7 +313,9 @@
                     UAE: 'United Arab Emirates',
                     UK: 'United Kingdom',
                     USA: 'United States of America',
-                }
+                },
+                // Errors list to show form validation errors
+                errors: []
             },
             methods: {
                 showHomeSection: function() {
@@ -393,13 +395,56 @@
                         }
                     }
                 },
-                submitForm: function() {
-                    // Empty the cart
-                    this.cart = [];
-                    // Alert that the order is submited
-                    alert('Order submited!');
-                    // Switch to Home section
-                    this.showCheckout = false;
+                validateAndSubmitForm: function() {
+                    this.errors = []; // Clear previous errors
+                    // Validate email
+                    if (!this.validEmail(this.order.email)) {
+                        this.errors.push('Error: Email is invalid! An email must contain valid prefix & email domain. E.g. "example@mail.com"');
+                    }
+                    // Validate phone (assuming it should be numbers & some special characters)
+                    else if (!this.validNumber(this.order.phone)) {
+                        this.errors.push('Error: Phone number must only contain numbers & optional special characters [+] and [-].');
+                    }
+                    // Validate phone and zip (assuming it should be numbers with correct USA format)
+                    else if (!this.validZip(this.order.zip)) {
+                        this.errors.push('Error: Zip code must only contain numbers & follow correct USA format [12345] or [12345-6789].');
+                    }
+                    // Validate first name and last name (both should only contain letters)
+                    else if (!this.validString(this.order.firstName) || !this.validString(this.order.lastName)) {
+                        this.errors.push('Error: Name is invalid! A name must only contain legal characters [a-zA-Z].');
+                    }
+                    // Finaly showing message/error
+                    // If no errors, submit the form
+                    if (!this.errors.length) {
+                        // Empty the cart
+                        this.cart = [];
+                        // Alert that the order is submited
+                        alert('Order submited!');
+                        // Switch to Home section
+                        this.showCheckout = false;
+                    } else {
+                        alert(this.errors.join("\n")); // Join error messages into a single alert
+                    }
+                },
+                // Validate email with regex
+                validEmail: function(email) {
+                    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // Regex for prefix & email domail
+                    return re.test(email); // Test value
+                },
+                // Validate phone number (should only contain numbers)
+                validNumber: function(value) {
+                    var re = /^[\+\(\)\-\s0-9]+$/; // Regex for plus, numbers, spaces, and dashes
+                    return re.test(value); // Test value
+                },
+                // Validate zip code (should only contain numbers)
+                validZip: function(value) {
+                    var re = /^\d{5}(-\d{4})?$/; // Regex for numbers, spaces, and dashes
+                    return re.test(value); // Test value
+                },
+                // Validate first and last name (should only contain letters)
+                validString: function(value) {
+                    var re = /^[a-zA-Z\s]+/; // Regex for letters only
+                    return re.test(value); // Test individual name
                 }
             },
             computed: {
@@ -423,7 +468,7 @@
                         return total + (subject ? subject.price * subject.orderedQuantity : 0);
                     }, 0);
                 },
-                sortedProducts() {
+                sortedArray() {
                     let subjectsArray = this.subjects.slice(0);
                     const compare = (a, b) => {
                         let result = 0;

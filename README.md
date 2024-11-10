@@ -39,3 +39,5 @@ Now render will have smooth fade or slide transitions.
 ### Commit 10 - Bill Overview
 - Modified index file to show bill overview. The overview displays order details from the order object inside the data property.
 - Modified checkout css file.
+### Commit 11 - Form Validation
+- Modified index file to validate checkout form. Now error will be alerted if any form field contains incorrect type/format of input. If the information is correct, the order will be submited.
