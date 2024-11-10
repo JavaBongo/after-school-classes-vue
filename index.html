@@ -10,18 +10,37 @@
     <!-- Site Title -->
     <title>The Middlesex School</title>
     <!-- Links -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
 </head>
 <body>
     <div id="app">
         <header>
+            <!-- Site Title -->
             <h1>{{sitename}}</h1>
+            <!-- Cart button -->
+            <button>
+                <i class="fas fa-cart-plus"></i>
+                Cart
+                {{cartItemCount}}
+            </button>
         </header>
         <main>
-            <p>List of subjects</p>
-            <ul>
-                <li v-for="subject in subjects" v-text="subject"></li>
-            </ul>
+            <!-- Subject Box -->
+            <div class="subject-card">
+                <!-- Subject Icon -->
+                <figure>
+                    <img v-bind:src="subject.img" style="width: 100px;">
+                </figure>
+                <h2 v-text="subject.title"></h2>
+                <p v-text="subject.location"></p>
+                <!-- Subject availability -->
+                <p>{{subject.availability}} seats available</p>
+                <p>${{subject.price}}</p>
+                <!-- Button to add subject to cart -->
+                <button v-on:click="addToCart">ADD TO CART</button>
+            </div>
         </main>
     </div>
     <script type="text/javascript">
@@ -29,7 +48,27 @@
             el: '#app',
             data: {
                 sitename: 'The Middlesex School - After School Classes',
-                subjects: ['Maths','English','Science','History','Computer','Art','Music','Physical Education','Drama','Geography']
+                subject: {
+                    id: 1000,
+                    title: 'Maths',
+                    location: 'London',
+                    availability: 10,
+                    price: 20,
+                    img: 'assets/Math-Symbol.jpg'
+                },
+                cart: []
+            },
+            methods: {
+                addToCart: function() {
+                    // Pushing the subject id in to cart
+                    this.cart.push(this.subject.id);
+                },
+            },
+            computed: {
+                cartItemCount: function() {
+                    // Counter for subjects in cart
+                    return this.cart.length || "";
+                },
             }
         })
     </script>
