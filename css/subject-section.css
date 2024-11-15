@@ -13,7 +13,7 @@
 .subject-card {
     width: 100%;
     max-width: 200px;
-    height: 300px;
+    height: 340px;
     border-radius: 15px;
     box-shadow: var(--shadow-color) 0px 7px 29px 0px;
     margin: 0;
@@ -36,6 +36,9 @@
 }
 .subject-avail {
     text-decoration: underline;
+}
+.subject-rating {
+    color: gold;
 }
 .subject-price {
     color: var(--highlight-color);

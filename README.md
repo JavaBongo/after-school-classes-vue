@@ -44,3 +44,7 @@ Now render will have smooth fade or slide transitions.
 ### Commit 12 - Search Functionality
 - Modified index file to have search functionality. Now search input will display subjects with matching title or location. Sort function still works and works even if search querry shows any or some subjects.
 - Fixed anchoring error by placing it in checkout button from previous mistake of sort button.
+### Commit 13 - Final Updates
+- Modified subjects.js file subjects list so that all subjects have 5 availability spaces. Rating stars have also been added.
+- Modified index file for search to now also check for price & available spaces. Changed the name of Checkout Button in nav to Cart Button. Added up/down icons in the dropdown fields of nav.
+- Modified some css files for style adjustments.

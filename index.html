@@ -33,9 +33,9 @@
                 </figure>
                 </a>
                 <!-- School Info -->
-                <p @mouseover="showInfo = true" @mouseleave="showInfo = false" class="nav-item">INFO</p>
+                <p @mouseover="showInfo = true" @mouseleave="showInfo = false" class="nav-item">INFO &nbsp;<i v-if="!showInfo" class="fa-solid fa-chevron-down"></i><i v-else class="fa-solid fa-chevron-up"></i></p>
                 <!-- School Contact -->
-                <p @mouseover="showContact = true" @mouseleave="showContact = false" class="nav-item">CONTACT</p>
+                <p @mouseover="showContact = true" @mouseleave="showContact = false" class="nav-item">CONTACT &nbsp;<i v-if="!showContact" class="fa-solid fa-chevron-down"></i><i v-else class="fa-solid fa-chevron-up"></i></p>
                 <!-- Search Box -->
                 <div id="search-box">
                     <i class="fas fa-search search-icon"></i>
@@ -43,9 +43,9 @@
                 </div>
                 <!-- Sort Button -->
                 <button v-on:click="showSortSection()" class="nav-item nav-button">SORT</button>
-                <!-- Checkout Button -->
+                <!-- Cart Button -->
                 <a href="#cart-section">
-                <button v-if="cartItemCount > 0" v-on:click="showCheckoutSection()" class="nav-item nav-button">CHECKOUT&nbsp;<i class="fa-solid fa-cart-shopping"></i>&nbsp;<div id="cart-counter">{{cartItemCount}}</div></button>
+                <button v-if="cartItemCount > 0" v-on:click="showCartSection()" class="nav-item nav-button">CART&nbsp;<i class="fa-solid fa-cart-shopping"></i>&nbsp;<div id="cart-counter">{{cartItemCount}}</div></button>
                 </a>
             </section>
             <!-- Drop down pop ups -->
@@ -65,7 +65,7 @@
         <main>
             <!-- Show the home contents containing sort & subjects sections -->
             <transition name="fade" mode="out-in">
-            <div v-if="!showCheckout" key="home">
+            <div v-if="!showCart" key="home">
                 <!-- Sort Section -->
                 <transition name="slide">
                 <section id="sort-section" v-if="showSort" key="sort">
@@ -118,6 +118,7 @@
                         <p v-else-if="subject.availability == 1" class="subject-item subject-avail">{{ subject.availability }} seat available</p>
                         <!-- Else no seats available -->
                         <p v-else class="subject-item subject-avail">No seats available</p>
+                        <p class="subject-item subject-rating">{{ subject.rating }}</p>
                         <p class="subject-item subject-price">${{ subject.price }}</p>
                         <button v-on:click="addToCart(subject)" v-if="subject.availability > 0" class="add-button">ADD TO CART</button>
                         <button disabled v-else class="add-button">NO SEATS AVAILABLE</button>
@@ -277,7 +278,7 @@
                 showInfo: false,
                 showContact: false,
                 showSort: false,
-                showCheckout: false,
+                showCart: false,
                 showForm: false,
                 currentView: 'home',
                 // External subjects list is now called which contains all the subjects details
@@ -320,15 +321,15 @@
             },
             methods: {
                 showHomeSection: function() {
-                    this.showCheckout = false;
+                    this.showCart = false;
                     this.showSort = false;
                 },
                 showSortSection: function() {
                     this.showSort = !this.showSort;
-                    this.showCheckout = false;
+                    this.showCart = false;
                 },
-                showCheckoutSection: function() {
-                    this.showCheckout = !this.showCheckout;
+                showCartSection: function() {
+                    this.showCart = !this.showCart;
                     this.showSort = false;
                     this.showForm = false;
                 },
@@ -371,7 +372,7 @@
                         // Change back to product section if no items in the car
                         if(!this.cart.length) {
                             this.showForm = false;
-                            this.showCheckout = false;
+                            this.showCart = false;
                             this.showSort = false
                         }
                     }
@@ -391,7 +392,7 @@
                         // Change back to product section if no items in the car
                         if(!this.cart.length) {
                             this.showForm = false;
-                            this.showCheckout = false;
+                            this.showCart = false;
                             this.showSort = false
                         }
                     }
@@ -422,7 +423,7 @@
                         // Alert that the order is submited
                         alert('Order submited!');
                         // Switch to Home section
-                        this.showCheckout = false;
+                        this.showCart = false;
                     } else {
                         alert(this.errors.join("\n")); // Join error messages into a single alert
                     }
@@ -472,13 +473,20 @@
                 sortANDfilteredSubjects() {
                     let filteredArray = [];  // This will hold the filtered subjects
 
-                    // Manually filter the subjects using a for loop (instead of using `filter`)
+                    // Manually filter the subjects using a for loop
                     if (this.searchInput) {
                         const searchLower = this.searchInput.toLowerCase();
                         for (let i = 0; i < this.subjects.length; i++) {
                             const subject = this.subjects[i];
-                            // Check if the subject title or location matches the search input
-                            if (subject.title.toLowerCase().includes(searchLower) || subject.location.toLowerCase().includes(searchLower)) {
+                            // Converting numeric values to strings for comparison
+                            const priceString = subject.price.toString();
+                            const availabilityString = subject.availability.toString();
+                            // Check if the subject title, location, price or available space matches the search input
+                            if (subject.title.toLowerCase().includes(searchLower)
+                             || subject.location.toLowerCase().includes(searchLower)
+                             || priceString.includes(searchLower)
+                             || availabilityString.includes(searchLower)
+                            ) {
                                     filteredArray.push(subject);
                             }
                         }
