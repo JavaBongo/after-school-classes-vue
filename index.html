@@ -16,16 +16,17 @@
     <link rel="stylesheet" href="css/subject-section.css">
     <link rel="stylesheet" href="css/sort-section.css">
     <link rel="stylesheet" href="css/checkout.css">
+    <link rel="stylesheet" href="css/media-queries.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
     <!-- Link for Subjects List file -->
     <script src="javascript/subjects.js"></script>
 </head>
-<body>
+<body onresize="app.updateScreenWidth()">
     <div id="app">
         <header>
             <!-- Navigation Bar -->
-            <section id="navigation-bar">
+            <section v-if="!isSmallScreen" id="navigation-bar">
                 <!-- School Logo -->
                 <a href="#subject-section">
                 <figure @mouseover="showSchool = true" @mouseleave="showSchool = false" v-on:click="showHomeSection()" class="nav-item">
@@ -45,20 +46,50 @@
                 <button v-on:click="showSortSection()" class="nav-item nav-button">SORT</button>
                 <!-- Cart Button -->
                 <a href="#cart-section">
-                <button v-if="cartItemCount > 0" v-on:click="showCartSection()" class="nav-item nav-button">CART&nbsp;<i class="fa-solid fa-cart-shopping"></i>&nbsp;<div id="cart-counter">{{cartItemCount}}</div></button>
+                <button v-if="cartItemCount > 0" v-on:click="showCartSection()" class="nav-item nav-button">CART&nbsp;<i class="fa-solid fa-cart-shopping"></i>&nbsp;<div class="cart-counter">{{cartItemCount}}</div></button>
                 </a>
             </section>
+            <!-- Navigation Bar for small screens -->
+            <section v-else id="navigation-bar">
+                <!-- Hamburger Menu -->
+                <button v-on:click="showMenuSection" id="hamburger-menu"><i class="fa-solid fa-bars"></i></button>
+                <!-- Search Box -->
+                <div id="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input v-model="searchInput" type="text" name="search" id="search-area">
+                </div>
+                <!-- Cart Button -->
+                <a href="#cart-section">
+                <button v-if="cartItemCount > 0" v-on:click="showCartSection()" class="nav-item nav-button"><i class="fa-solid fa-cart-shopping"></i>&nbsp;<div class="cart-counter">{{cartItemCount}}</div></button>
+                </a>
+            </section>
+            <transition name="slide" mode="out-in">
+            <!-- Menu for small screens -->
+            <div id="menu-section" v-if="showMenu && isSmallScreen">
+                <button v-on:click="showHomeSection2">HOME</button>
+                <button v-on:click="showInfoSection">INFO &nbsp;<i v-if="!showInfo" class="fa-solid fa-chevron-down"></i><i v-else class="fa-solid fa-chevron-up"></i></button>
+                <div v-show="showInfo" class="info-box">
+                    <p>This web app allows students and parents to explore and purchase after-school classes and activities. Users can browse lessons by subject, location, price, and availability. The app offers an intuitive shopping cart and checkout experience for easy enrollment.</p>
+                </div>
+                <button v-on:click="showContactSection">CONTACT &nbsp;<i v-if="!showContact" class="fa-solid fa-chevron-down"></i><i v-else class="fa-solid fa-chevron-up"></i></button>
+                <div v-show="showContact" class="info-box">
+                    <p>Our Hotline is <a href="tel:+123456789">+1 234 56789</a>,</p><br><p>For SMS <a href="sms:123">"123"</a>,</p><br><p>Or Email Us at <a href="mailto:someone@example.com">someone@example.com</a></p>
+                </div>
+                <button v-on:click="showSortSection2">SORT</button>
+                <button v-if="cartItemCount > 0" v-on:click="showCartSection2">CART<i class="fa-solid fa-cart-shopping"></i>&nbsp;<div class="cart-counter">{{cartItemCount}}</div></button>
+            </div>
+            </transition>
             <!-- Drop down pop ups -->
-            <div @mouseover="showSchool = true" @mouseleave="showSchool = false" id="school-info" v-show="showSchool" class="info-box">
+            <div v-if="!isSmallScreen" @mouseover="showSchool = true" @mouseleave="showSchool = false" id="school-info" v-show="showSchool" class="info-box">
                 <figure class="nav-item">
                     <img v-bind:src="school.logo" style="width: 50px;">
                 </figure>
                 <h1>{{school.sitename}}</h1><h2>by Rushaan</h2>
             </div>
-            <div @mouseover="showInfo = true" @mouseleave="showInfo = false" id="information" v-show="showInfo" class="info-box">
+            <div v-if="!isSmallScreen" @mouseover="showInfo = true" @mouseleave="showInfo = false" id="information" v-show="showInfo" class="info-box">
                 <p>This web app allows students and</p><br><p>parents to explore and purchase after-</p><br><p>school classes and activities. Users can</p><br><p>browse lessons by subject, location,</p><br><p>price, and availability. The app offers an</p><br><p>intuitive shopping cart and checkout</p><br><p>experience for easy enrollment.</p>
             </div>
-            <div @mouseover="showContact = true" @mouseleave="showContact = false" id="contact-info" v-show="showContact" class="info-box">
+            <div v-if="!isSmallScreen" @mouseover="showContact = true" @mouseleave="showContact = false" id="contact-info" v-show="showContact" class="info-box">
                 <p>Our Hotline is <a href="tel:+123456789">+1 234 56789</a>,</p><br><p>For SMS <a href="sms:123">"123"</a>,</p><br><p>Or Email Us at <a href="mailto:someone@example.com">someone@example.com</a></p>
             </div>
         </header>
@@ -280,7 +311,8 @@
                 showSort: false,
                 showCart: false,
                 showForm: false,
-                currentView: 'home',
+                showMenu: false,
+                windowWidth: window.innerWidth,
                 // External subjects list is now called which contains all the subjects details
                 subjects: subjectList,
                 sort: {
@@ -324,17 +356,40 @@
                     this.showCart = false;
                     this.showSort = false;
                 },
+                showHomeSection2: function() {
+                    this.showHomeSection();
+                    this.showMenuSection();
+                },
                 showSortSection: function() {
                     this.showSort = !this.showSort;
                     this.showCart = false;
+                },
+                showSortSection2: function() {
+                    this.showSortSection();
+                    this.showMenuSection();
                 },
                 showCartSection: function() {
                     this.showCart = !this.showCart;
                     this.showSort = false;
                     this.showForm = false;
                 },
+                showCartSection2: function() {
+                    this.showCartSection();
+                    this.showMenuSection();
+                },
                 showFormSection: function() {
                     this.showForm = !this.showForm;
+                },
+                showMenuSection: function() {
+                    this.showMenu = !this.showMenu;
+                    this.showInfo = false;
+                    this.showContact = false;
+                },
+                showInfoSection: function() {
+                    this.showInfo = !this.showInfo;
+                },
+                showContactSection: function() {
+                    this.showContact = !this.showContact;
                 },
                 addToCart: function(subject) {
                     if (subject.availability > 0) {
@@ -445,8 +500,11 @@
                 },
                 // Validate first and last name (should only contain letters)
                 validString: function(value) {
-                    var re = /^[a-zA-Z\s]+/; // Regex for letters only
+                    var re = /^[a-zA-Z]+$/; // Regex for letters only
                     return re.test(value); // Test individual name
+                },
+                updateScreenWidth() {
+                    this.windowWidth = window.innerWidth; // Updates windowWidth when the window is resized
                 }
             },
             computed: {
@@ -522,6 +580,9 @@
                         !this.order.zip || 
                         !this.cart.length;
                 },
+                isSmallScreen() {
+                    return this.windowWidth <= 768;
+                }
             }
         })
     </script>

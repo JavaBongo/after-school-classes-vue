@@ -1,0 +1,156 @@
+@media (max-width: 768px) {
+    /* Navigation */
+    #navigation-bar {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        grid-gap: 10px;
+    }
+    #search-box {
+        width: 50vw;
+        justify-self: center;
+        margin: 0;
+    }
+    #hamburger-menu, .nav-button {
+        width: 50px;
+        height: 50px;
+        margin: 0;
+        background-color: var(--text-color);
+        border: none;
+        font-size: 15pt;
+        color: var(--secondary-color);
+    }
+    .nav-button {
+        width: 60px;
+    }
+    #hamburger-menu::after {
+        transform: rotateX(90deg);
+        transition: all 300ms;
+    }
+    #navigation-bar > a {
+        justify-self: right;
+    }
+    #menu-section {
+        width: 100vw;
+        height: calc(100vh - 75px);
+        max-height: calc(100vh - 75px);
+        position: fixed;
+        border: 1px solid var(--accent-color);
+        background-color: rgba(45, 45, 45, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding-top: 50px;
+        color: var(--primary-color);
+        font-family: 'Montserrat';
+        font-size: 10pt;
+        overflow-y: scroll;
+    }
+    
+    #menu-section > button {
+        width: 90vw;
+        height: 100px;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid black;
+        text-align: left;
+        color: var(--text-color);
+        font-size: 6vw;
+        font-weight: 600;
+    }
+    .cart-counter {
+        width: auto;
+        display: inline;
+    }
+    .info-box {
+        width: 80%;
+        height: auto;
+        border: none;
+        border-radius: none;
+        background-color: transparent;
+        backdrop-filter: none;
+        font-size: 5vw;
+    }
+    .info-box:nth-child(0) {
+        text-align: justify;
+    }
+    /* Checkout */
+    .form-input {
+        width: 80%;
+    }
+    #checkout-form > select {
+        width: 83%;
+    }
+}
+@media (max-width: 768px) and (min-width: 425px) {
+    #menu-section > button {
+        font-size: 5vw;
+    }
+    .info-box {
+        font-size: 4vw;
+    }
+}
+@media (max-width: 900px) and (min-width: 420px) {
+    .receipt-img {
+        width: 30%;
+    }
+}
+@media (max-width: 900px) {
+    /* Subjects */
+    #subject-section{
+        width: 100vw;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+    /* Cart */
+    #cart-items-container {
+        width: 90vw;
+        height: auto;
+        margin-bottom: 20px;
+    }
+    .cart-product {
+        width: 100%;
+        height: auto;
+    }
+    .cart-product-img {
+        width: 20vw;
+    }
+    .remove {
+        font-size: 10pt;
+    }
+    #price-overview {
+        width: 90vw;
+        margin: 0;
+    }
+    /* Checkout */
+    #checkout-section {
+        flex-wrap: wrap;
+    }
+    #checkout-form, #billing-information {
+        width: 100%;
+    }
+    #checkout-form {
+        border-bottom-left-radius: 0;
+        margin-bottom: 20px;
+    }
+    .input-span {
+        width: 80%;
+        height: auto;
+        margin: 15px 0;
+    }
+}
+@media (max-width: 1155px) {
+    /* Checkout */
+    .input-span {
+        width: 35%;
+        height: auto;
+        margin: 15px 0;
+    }
+}
+@media (min-width: 1200px) {
+    /* Subjects */
+    #subject-section {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+    }
+}

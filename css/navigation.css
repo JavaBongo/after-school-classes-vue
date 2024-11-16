@@ -60,7 +60,7 @@
 }
 
 /* Checkout button counter */
-#cart-counter {
+.cart-counter {
     background-color: var(--text-color);
     width: auto;
     min-width: 10px;

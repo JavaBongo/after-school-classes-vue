@@ -1,5 +1,7 @@
 # after-school-classes-vue
 A Vue.js-based front-end web application for students and parents to browse and purchase after-school classes and activities.
+## Website Link
+### https://javabongo.github.io/after-school-classes-vue/
 ## Commit Log History
 ### Commit 1 - Inital Setup
 - Added index.html file.
@@ -48,3 +50,6 @@ Now render will have smooth fade or slide transitions.
 - Modified subjects.js file subjects list so that all subjects have 5 availability spaces. Rating stars have also been added.
 - Modified index file for search to now also check for price & available spaces. Changed the name of Checkout Button in nav to Cart Button. Added up/down icons in the dropdown fields of nav.
 - Modified some css files for style adjustments.
+### Commit 14 - Final - Media Queries
+- Added 1 css file: media-queries.css
+- Modified index file to include hamburger menu navigation for small screens.
