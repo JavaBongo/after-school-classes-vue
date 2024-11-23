@@ -23,7 +23,7 @@ body {
     width: 100vw;
     padding: 0;
     margin: 0;
-    background-color: var(--primary-color);
+    background-color: white;
 }
 header {
     /* Making the header fixed */
@@ -31,6 +31,7 @@ header {
 }
 main {
     /* Adjusting padding gap due to the header */
+    background-color: var(--primary-color);
     padding: 50px 0;
 }
 figure {
@@ -41,7 +42,6 @@ a {
     text-decoration: none;
     color: var(--text-color);
 }
-
 /* Transition Elements */
 .fade-enter-active, .fade-leave-active {
     /* Fade In */

@@ -146,6 +146,47 @@
         height: auto;
         margin: 15px 0;
     }
+    .subject-card {
+        width: 100%;
+        max-width: 200px;
+    }
+    .hero-icon {
+        width:15px;
+    }
+}
+@media (max-width: 2800px) and (min-width: 1000px) {
+    #navigation-bar {
+        height: 5vw;
+    }
+    .nav-item {
+        height: 5vw;
+        font-size: 1.5vw;
+    }
+    .nav-logo {
+        width: 3vw;
+    }
+    #search-box {
+        height: 3vw;
+        border-radius: 1vw;
+        margin-right: 1vw;
+    }
+    .search-icon {
+        font-size: 1.5vw;
+        left: 1vw;
+    }
+    #search-area {
+        padding-left: 3vw;
+        font-size: 2vw;
+    }
+    .cart-counter {
+        width: 1.75vw;
+    }
+    #hero-section {
+        padding-top: 5vw;
+    }
+    #hero-vector {
+        border-bottom-left-radius: 4vw;
+    }
 }
 @media (min-width: 1200px) {
     /* Subjects */

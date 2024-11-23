@@ -2,7 +2,10 @@
 #navigation-bar {
     width: 100vw;
     height: 50px;
-    background-color: var(--secondary-color);
+    /* background-color: var(--secondary-color); */
+    background-color: rgba(25, 25, 25, 0.55); /* A dark gray with some transparency */
+    backdrop-filter: blur(10px); /* Adds the blur effect */
+    -webkit-backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -86,10 +89,10 @@
     display: inline-block;
 }
 #school-info {
-    margin-left: 15vw;
+    margin-left: 10vw;
 }
 #information {
-    margin-left: 20vw;
+    margin-left: 18vw;
 }
 #contact-info {
     margin-left: 26vw;

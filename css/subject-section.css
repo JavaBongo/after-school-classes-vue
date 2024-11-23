@@ -11,8 +11,7 @@
 }
 /* Subject Card */
 .subject-card {
-    width: 100%;
-    max-width: 200px;
+    width: 80%;
     height: 340px;
     border-radius: 15px;
     box-shadow: var(--shadow-color) 0px 7px 29px 0px;

@@ -13,6 +13,7 @@
     <!-- Links -->
     <link rel="stylesheet" href="css/basic.css">
     <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/hero-section.css">
     <link rel="stylesheet" href="css/subject-section.css">
     <link rel="stylesheet" href="css/sort-section.css">
     <link rel="stylesheet" href="css/checkout.css">
@@ -43,7 +44,9 @@
                     <input v-model="searchInput" type="text" name="search" id="search-area">
                 </div>
                 <!-- Sort Button -->
+                <a href="#sort-section">
                 <button v-on:click="showSortSection()" class="nav-item nav-button">SORT</button>
+                </a>
                 <!-- Cart Button -->
                 <a href="#cart-section">
                 <button v-if="cartItemCount > 0" v-on:click="showCartSection()" class="nav-item nav-button">CART&nbsp;<i class="fa-solid fa-cart-shopping"></i>&nbsp;<div class="cart-counter">{{cartItemCount}}</div></button>
@@ -60,12 +63,18 @@
                 </div>
                 <!-- Cart Button -->
                 <a href="#cart-section">
-                <button v-if="cartItemCount > 0" v-on:click="showCartSection()" class="nav-item nav-button"><i class="fa-solid fa-cart-shopping"></i>&nbsp;<div class="cart-counter">{{cartItemCount}}</div></button>
+                <button v-if="cartItemCount > 0" v-on:click="showCartSection2()" class="nav-item nav-button"><i class="fa-solid fa-cart-shopping"></i>&nbsp;<div class="cart-counter">{{cartItemCount}}</div></button>
                 </a>
             </section>
             <transition name="slide" mode="out-in">
             <!-- Menu for small screens -->
             <div id="menu-section" v-if="showMenu && isSmallScreen">
+                <figure v-on:click="showHomeSection2()" class="nav-item" style="width: 100%;">
+                    <span style="margin: 0 auto;">
+                        <img v-bind:src="school.logo" class="nav-logo">
+                        <h1 v-text="school.sitename"></h1>
+                    </span>
+                </figure>
                 <button v-on:click="showHomeSection2">HOME</button>
                 <button v-on:click="showInfoSection">INFO &nbsp;<i v-if="!showInfo" class="fa-solid fa-chevron-down"></i><i v-else class="fa-solid fa-chevron-up"></i></button>
                 <div v-show="showInfo" class="info-box">
@@ -97,6 +106,22 @@
             <!-- Show the home contents containing sort & subjects sections -->
             <transition name="fade" mode="out-in">
             <div v-if="!showCart" key="home">
+                <!-- Hero Section -->
+                <section id="hero-section">
+                    <span class="hero-span">
+                        <h1 id="hero-tag-line">Grow Bigger,<br>Dream Bigger</h1>
+                        <h1 id="hero-exclamation-mark">!</h1>
+                        <h3>After-School Classes That Empower!</h3>
+                        <figure class="hero-figure-icon">
+                            <img v-bind:src="school.icon" class="hero-icon">
+                        </figure>
+                    </span>
+                    <span class="hero-span">
+                        <figure class="hero-figure-vector">
+                            <img v-bind:src="school.vector" id="hero-vector">
+                        </figure>
+                    </span>
+                </section>
                 <!-- Sort Section -->
                 <transition name="slide">
                 <section id="sort-section" v-if="showSort" key="sort">
@@ -303,7 +328,9 @@
             data: {
                 school: {
                     sitename: 'The Middlesex School',
-                    logo: 'assets/the-mdx-school.png'
+                    logo: 'assets/the-mdx-school.png',
+                    icon: 'assets/the-mdx-icon.png',
+                    vector: 'assets/hero-vector.jpeg'
                 },
                 showSchool: false,
                 showInfo: false,
@@ -366,16 +393,16 @@
                 },
                 showSortSection2: function() {
                     this.showSortSection();
-                    this.showMenuSection();
+                    this.showMenu = false;
                 },
-                showCartSection: function() {
+                    showCartSection: function() {
                     this.showCart = !this.showCart;
                     this.showSort = false;
                     this.showForm = false;
                 },
                 showCartSection2: function() {
                     this.showCartSection();
-                    this.showMenuSection();
+                    this.showMenu = false;
                 },
                 showFormSection: function() {
                     this.showForm = !this.showForm;

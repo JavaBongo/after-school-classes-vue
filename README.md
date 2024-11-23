@@ -53,3 +53,6 @@ Now render will have smooth fade or slide transitions.
 ### Commit 14 - Final - Media Queries
 - Added 1 css file: media-queries.css
 - Modified index file to include hamburger menu navigation for small screens.
+### Commit 15 - Final
+- Added 1 css file: hero-section.css
+- Modified index file to include hero section. Added final touches.

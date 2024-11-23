@@ -1,0 +1,58 @@
+#hero-section {
+    margin-top: -50px;
+    width: 100vw;
+    height: 45vw;
+    padding-top: 50px;
+    background-color: black;
+    /* background-image: radial-gradient(var(--secondary-color), black); */
+    display: flex;
+    flex-wrap: wrap;
+}
+.hero-figure-icon {
+    width: 100%;
+    height: 40px;
+}
+.hero-icon {
+    width: 2vw;
+}
+.hero-span {
+    width: calc(70% - 4vw);
+    height: calc(100%);
+    padding: 0 2vw;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    color: var(--text-color);
+    font-family: 'Poppins';
+}
+.hero-span > * {
+    margin: 0;
+}
+.hero-span > h3 {
+    font-size: 2vw;
+}
+#hero-tag-line {
+    height: auto;
+    font-size: 7.15vw;
+    margin: 0;
+    line-height: 1.25;
+}
+#hero-exclamation-mark {
+    font-size: 18.97vw;
+    line-height: 1;
+}
+.hero-span:nth-child(2) {
+    width: 30%;
+    height: calc(100%);
+    display: inline;
+    padding: 0;
+}
+.hero-figure-vector {
+    width: 100%;
+    height: 100%;
+    text-align: right;
+}
+#hero-vector {
+    height: 100%;
+    border-bottom-left-radius: 50px;
+}
