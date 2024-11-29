@@ -341,7 +341,7 @@
                 showMenu: false,
                 windowWidth: window.innerWidth,
                 // External subjects list is now called which contains all the subjects details
-                subjects: subjectList,
+                subjects: [],
                 sort: {
                     tag: 'title',
                     direction: true
@@ -377,6 +377,24 @@
                 // Errors list to show form validation errors
                 errors: [],
                 searchInput: '',
+            },
+            created() {
+                fetch('http://localhost:3000/collection/lessons', {
+                        method: 'GET', // set the HTTP method as 'GET'
+                        headers: {
+                            'Content-Type': 'application/json', // set the data type as JSON
+                        },
+                    })
+                        .then(response => response.json())
+                        .then((data) => {
+                            this.subjects = data.map((subject) => ({
+                                ...subject,
+                                _id: String(subject._id),
+                            }));
+						})
+                        .catch((error) => {
+                            alert(error);
+                        });
             },
             methods: {
                 showHomeSection: function() {
@@ -420,18 +438,9 @@
                 },
                 addToCart: function(subject) {
                     if (subject.availability > 0) {
-                        // Check if the subject is already in the cart
-                        const cartItem = this.cart.find(id => id === subject.id);
-                        
-                        if (cartItem) {
-                            // If the subject is already in the cart, increment orderedQuantity
-                            const existingsubject = this.subjects.find(p => p.id === subject.id);
-                            existingsubject.orderedQuantity++;
-                        } else {
-                            // If it's a new subject, add to cart and increment orderedQuantity
-                            this.cart.push(subject.id);
-                            subject.orderedQuantity++;
-                        }
+                        // If it's a new subject, add to cart and increment orderedQuantity
+                        this.cart.push(subject.id);
+                        subject.orderedQuantity++;
 
                         // Decrease availability in both cases
                         subject.availability--;
@@ -479,6 +488,43 @@
                         }
                     }
                 },
+                fetchPostUpdate: function() {
+                    const newOrder = this.order;
+
+                    // set the url to your server and route
+                    fetch('http://localhost:3000/collection/order', {
+                        method: 'POST', // set the HTTP method as 'POST'
+                        headers: {
+                            'Content-Type': 'application/json', // set the data type as JSON
+                        },
+                        body: JSON.stringify(newOrder), // need to stringify the JSON object
+                    })
+                        .then(response => response.json())
+                        .then(responseJSON => {
+                            document.getElementById('response').innerText = JSON.stringify(responseJSON);
+                        })
+                        .catch((error) => {
+                            document.getElementById('error').innerText = error;
+                        });
+
+                    this.cartItems.forEach(subject => {
+                        const newAvailability = { availability: subject.availability }; // Use correct `subject`
+                        fetch(`http://localhost:3000/collection/lessons/${subject._id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(newAvailability),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Update local subjects array if necessary
+                            const updatedSubject = this.subjects.find(s => s._id === subject._id);
+                            if (updatedSubject) updatedSubject.availability = data.availability;
+                        })
+                        .catch(error => {
+                            alert(error);
+                        });
+                    });
+                },
                 validateAndSubmitForm: function() {
                     this.errors = []; // Clear previous errors
                     // Validate email
@@ -500,6 +546,7 @@
                     // Finaly showing message/error
                     // If no errors, submit the form
                     if (!this.errors.length) {
+                        // this.fetchPostUpdate;
                         // Empty the cart
                         this.cart = [];
                         // Alert that the order is submited
@@ -544,7 +591,7 @@
                 },
                 cartItems() {
                     // Map product IDs in the cart to their full product details
-                    return this.cart.map(id => {
+                    this.cart = this.cart.map(id => {
                         return this.subjects.find(subject => subject.id === id);
                     });
                 },
