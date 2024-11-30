@@ -20,8 +20,6 @@
     <link rel="stylesheet" href="css/media-queries.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
-    <!-- Link for Subjects List file -->
-    <script src="javascript/subjects.js"></script>
 </head>
 <body onresize="app.updateScreenWidth()">
     <div id="app">
@@ -190,7 +188,7 @@
                     <!-- Cart Items Container -->
                     <div id="cart-items-container">
                         <!-- Cart Items: Looping all cart items to show cart products -->
-                        <div v-for="item in cartItems" :key="item.id" class="cart-product">
+                        <div v-for="item in cartUniqueItems" :key="item.id" class="cart-product">
                             <!-- Cart Product Icon -->
                             <figure class="cart-product-figure">
                                 <img :src="item.img" class="cart-product-img" alt="Product image">
@@ -308,7 +306,7 @@
                         <hr class="receipt-line">
                         <!-- Order Items x Quantity & Price -->
                         <span class="receipt-span"><p class="bill-label-item">Product:</p><p class="bill-answer-price">Amount</p></span>
-                        <span v-for="item in cartItems" :key="item.id" class="receipt-span">
+                        <span v-for="item in cartUniqueItems" :key="item.id" class="receipt-span">
                             <p class="bill-label-item">{{ item.title }} x{{item.orderedQuantity}}</p>
                             <p class="bill-answer-price">${{ (item.price * item.orderedQuantity).toFixed(2) }}</p>
                         </span>
@@ -379,22 +377,7 @@
                 searchInput: '',
             },
             created() {
-                fetch('http://localhost:3000/collection/lessons', {
-                        method: 'GET', // set the HTTP method as 'GET'
-                        headers: {
-                            'Content-Type': 'application/json', // set the data type as JSON
-                        },
-                    })
-                        .then(response => response.json())
-                        .then((data) => {
-                            this.subjects = data.map((subject) => ({
-                                ...subject,
-                                _id: String(subject._id),
-                            }));
-						})
-                        .catch((error) => {
-                            alert(error);
-                        });
+                this.fetchSubjects();
             },
             methods: {
                 showHomeSection: function() {
@@ -436,11 +419,28 @@
                 showContactSection: function() {
                     this.showContact = !this.showContact;
                 },
+                fetchSubjects: function(){
+                    fetch('http://localhost:3000/collection/lessons', {
+                        method: 'GET', // set the HTTP method as 'GET'
+                        headers: {
+                            'Content-Type': 'application/json', // set the data type as JSON
+                        },
+                    })
+                        .then(response => response.json())
+                        .then((data) => {
+                            this.subjects = data.map((subject) => ({
+                                ...subject,
+                                _id: String(subject._id),
+                            }));
+						})
+                        .catch((error) => {
+                            alert("fetchSubjects: "+error);
+                        });
+                },
                 addToCart: function(subject) {
                     if (subject.availability > 0) {
                         // If it's a new subject, add to cart and increment orderedQuantity
                         this.cart.push(subject.id);
-                        subject.orderedQuantity++;
 
                         // Decrease availability in both cases
                         subject.availability--;
@@ -488,42 +488,24 @@
                         }
                     }
                 },
-                fetchPostUpdate: function() {
-                    const newOrder = this.order;
-
-                    // set the url to your server and route
-                    fetch('http://localhost:3000/collection/order', {
-                        method: 'POST', // set the HTTP method as 'POST'
-                        headers: {
-                            'Content-Type': 'application/json', // set the data type as JSON
-                        },
-                        body: JSON.stringify(newOrder), // need to stringify the JSON object
-                    })
-                        .then(response => response.json())
-                        .then(responseJSON => {
-                            document.getElementById('response').innerText = JSON.stringify(responseJSON);
-                        })
-                        .catch((error) => {
-                            document.getElementById('error').innerText = error;
+                updateAvailability: function() {
+                    this.cartUniqueItems.forEach(subject => {
+                            const newAvailability = { availability: subject.availability }; // Use correct `subject`
+                            fetch(`http://localhost:3000/collection/lessons/${subject._id}`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(newAvailability),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                // Update local subjects array if necessary
+                                const updatedSubject = this.subjects.find(s => s._id === subject._id);
+                                if (updatedSubject) updatedSubject.availability = data.availability;
+                            })
+                            .catch(error => {
+                                alert("fetchPUTUpdate: "+error);
+                            });
                         });
-
-                    this.cartItems.forEach(subject => {
-                        const newAvailability = { availability: subject.availability }; // Use correct `subject`
-                        fetch(`http://localhost:3000/collection/lessons/${subject._id}`, {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(newAvailability),
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            // Update local subjects array if necessary
-                            const updatedSubject = this.subjects.find(s => s._id === subject._id);
-                            if (updatedSubject) updatedSubject.availability = data.availability;
-                        })
-                        .catch(error => {
-                            alert(error);
-                        });
-                    });
                 },
                 validateAndSubmitForm: function() {
                     this.errors = []; // Clear previous errors
@@ -546,7 +528,25 @@
                     // Finaly showing message/error
                     // If no errors, submit the form
                     if (!this.errors.length) {
-                        // this.fetchPostUpdate;
+                        const newOrder = this.order;
+
+                        // set the url to your server and route
+                        fetch('http://localhost:3000/collection/orders', {
+                            method: 'POST', // set the HTTP method as 'POST'
+                            headers: {
+                                'Content-Type': 'application/json', // set the data type as JSON
+                            },
+                            body: JSON.stringify(newOrder), // need to stringify the JSON object
+                        })
+                            .then(response => response.json())
+                            .then(responseJSON => {
+                                alert(JSON.stringify(responseJSON));
+                                this.updateAvailability();
+                            })
+                            .catch((error) => {
+                                alert("fetchPOSTOrder: "+error);
+                            });
+
                         // Empty the cart
                         this.cart = [];
                         // Alert that the order is submited
@@ -582,18 +582,31 @@
                 }
             },
             computed: {
-                cartItemCount: function() {
-                    // Sum the orderedQuantity for each product in the cart
-                    return this.cart.reduce((total, id) => {
-                        const subject = this.subjects.find(s => s.id === id);
-                        return total + (subject ? subject.orderedQuantity : 0);
-                    }, 0) || "";
+                cartItemCount() {
+                    return this.cart.length;
                 },
-                cartItems() {
-                    // Map product IDs in the cart to their full product details
-                    this.cart = this.cart.map(id => {
-                        return this.subjects.find(subject => subject.id === id);
+                cartUniqueItems() {
+                    // Use a temporary object to track ordered quantities by subject ID
+                    const uniqueItems = {};
+
+                    this.cart.forEach(id => {
+                        if (!uniqueItems[id]) {
+                            // Find the subject in the subjects array and initialize the object
+                            const subject = this.subjects.find(subject => subject.id === id);
+                            if (subject) {
+                                uniqueItems[id] = {
+                                    ...subject,
+                                    orderedQuantity: 1, // Start with 1 since this is the first occurrence
+                                };
+                            }
+                        } else {
+                            // If the subject is already in uniqueItems, increment the orderedQuantity
+                            uniqueItems[id].orderedQuantity++;
+                        }
                     });
+
+                    // Return the unique items as an array
+                    return Object.values(uniqueItems);
                 },
                 cartSubtotal() {
                     // Calculate the total price for all items in the cart
