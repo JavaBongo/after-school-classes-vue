@@ -440,7 +440,7 @@
                 addToCart: function(subject) {
                     if (subject.availability > 0) {
                         // If it's a new subject, add to cart and increment orderedQuantity
-                        this.cart.push(subject.id);
+                        this.cart.push(subject._id);
 
                         // Decrease availability in both cases
                         subject.availability--;
@@ -589,19 +589,19 @@
                     // Use a temporary object to track ordered quantities by subject ID
                     const uniqueItems = {};
 
-                    this.cart.forEach(id => {
-                        if (!uniqueItems[id]) {
+                    this.cart.forEach(_id => {
+                        if (!uniqueItems[_id]) {
                             // Find the subject in the subjects array and initialize the object
-                            const subject = this.subjects.find(subject => subject.id === id);
+                            const subject = this.subjects.find(subject => subject._id === _id);
                             if (subject) {
-                                uniqueItems[id] = {
+                                uniqueItems[_id] = {
                                     ...subject,
                                     orderedQuantity: 1, // Start with 1 since this is the first occurrence
                                 };
                             }
                         } else {
                             // If the subject is already in uniqueItems, increment the orderedQuantity
-                            uniqueItems[id].orderedQuantity++;
+                            uniqueItems[_id].orderedQuantity++;
                         }
                     });
 
