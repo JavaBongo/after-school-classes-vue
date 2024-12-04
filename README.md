@@ -56,3 +56,10 @@ Now render will have smooth fade or slide transitions.
 ### Commit 15 - Final
 - Added 1 css file: hero-section.css
 - Modified index file to include hero section. Added final touches.
+### Commits 16 to 20 - Fetch
+- Modified index file to include fetch for the following:
+    - Getting and displaying all lessons from database.
+    - Posting new orders to the database.
+    - Putting updates to lesson available seats in the database.
+    - Getting lessons based on search query.
+- Fixed add to cart functionality and its variables.

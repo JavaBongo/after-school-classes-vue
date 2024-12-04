@@ -29,7 +29,7 @@
                 <!-- School Logo -->
                 <a href="#subject-section">
                 <figure @mouseover="showSchool = true" @mouseleave="showSchool = false" v-on:click="showHomeSection()" class="nav-item">
-                    <img v-bind:src="school.logo" class="nav-logo">
+                    <img v-bind:src="imageLink(school.logo)" class="nav-logo">
                 </figure>
                 </a>
                 <!-- School Info -->
@@ -39,7 +39,7 @@
                 <!-- Search Box -->
                 <div id="search-box">
                     <i class="fas fa-search search-icon"></i>
-                    <input v-model="searchInput" type="text" name="search" id="search-area">
+                    <input v-on:input="fetchSearch" v-model.trim="searchInput" type="text" name="search" id="search-area">
                 </div>
                 <!-- Sort Button -->
                 <a href="#sort-section">
@@ -57,7 +57,7 @@
                 <!-- Search Box -->
                 <div id="search-box">
                     <i class="fas fa-search search-icon"></i>
-                    <input v-model="searchInput" type="text" name="search" id="search-area">
+                    <input v-on:input="fetchSearch" v-model.trim="searchInput" type="text" name="search" id="search-area">
                 </div>
                 <!-- Cart Button -->
                 <a href="#cart-section">
@@ -69,7 +69,7 @@
             <div id="menu-section" v-if="showMenu && isSmallScreen">
                 <figure v-on:click="showHomeSection2()" class="nav-item" style="width: 100%;">
                     <span style="margin: 0 auto;">
-                        <img v-bind:src="school.logo" class="nav-logo">
+                        <img v-bind:src="imageLink(school.logo)" class="nav-logo">
                         <h1 v-text="school.sitename"></h1>
                     </span>
                 </figure>
@@ -89,7 +89,7 @@
             <!-- Drop down pop ups -->
             <div v-if="!isSmallScreen" @mouseover="showSchool = true" @mouseleave="showSchool = false" id="school-info" v-show="showSchool" class="info-box">
                 <figure class="nav-item">
-                    <img v-bind:src="school.logo" style="width: 50px;">
+                    <img v-bind:src="imageLink(school.logo)" style="width: 50px;">
                 </figure>
                 <h1>{{school.sitename}}</h1><h2>by Rushaan</h2>
             </div>
@@ -111,12 +111,12 @@
                         <h1 id="hero-exclamation-mark">!</h1>
                         <h3>After-School Classes That Empower!</h3>
                         <figure class="hero-figure-icon">
-                            <img v-bind:src="school.icon" class="hero-icon">
+                            <img v-bind:src="imageLink(school.icon)" class="hero-icon">
                         </figure>
                     </span>
                     <span class="hero-span">
                         <figure class="hero-figure-vector">
-                            <img v-bind:src="school.vector" id="hero-vector">
+                            <img v-bind:src="imageLink(school.vector)" id="hero-vector">
                         </figure>
                     </span>
                 </section>
@@ -159,10 +159,10 @@
                 <!-- Subjects Section -->
                 <section id="subject-section">
                     <!-- Subject Box -->
-                    <div v-for="subject in sortANDfilteredSubjects" :key="subject.id" class="subject-card">
+                    <div v-for="subject in displayedSubjects" :key="subject.id" class="subject-card">
                         <!-- Subject Icon -->
                         <figure>
-                            <img v-bind:src="subject.img" class="subject-img">
+                            <img v-bind:src="imageLink(subject.img)" class="subject-img">
                         </figure>
                         <h2 class="subject-item">{{ subject.title }}</h2>
                         <p class="subject-item subject-location">{{ subject.location }}</p>
@@ -191,7 +191,7 @@
                         <div v-for="item in cartUniqueItems" :key="item.id" class="cart-product">
                             <!-- Cart Product Icon -->
                             <figure class="cart-product-figure">
-                                <img :src="item.img" class="cart-product-img" alt="Product image">
+                                <img :src="imageLink(item.img)" class="cart-product-img" alt="Product image">
                             </figure>
                             <!-- Cart Product Information -->
                             <div class="cart-product-info">
@@ -285,12 +285,12 @@
                             <label for="business">Phone</label>
                         </span>
                         <!-- Place Order Button -->
-                        <button id="submitButton" v-if="!isFormInvalid" v-on:click="validateAndSubmitForm">Place Order</button>
+                        <button id="submitButton" v-if="!isFormInvalid" v-on:click="validateFormInput">Place Order</button>
                     </div>
                     <!-- Billing Information/Overview Section -->
                     <div id="billing-information">
                         <figure class="receipt-figure">
-                            <img v-bind:src="school.logo" class="receipt-img">
+                            <img v-bind:src="imageLink(school.logo)" class="receipt-img">
                         </figure>
                         <h4>{{school.name}}</h4>
                         <h4>Bill Overview</h4>
@@ -358,7 +358,8 @@
                     promotion: 'Do not send promotions',
                     sendPromotion: 'Send promotions',
                     dontSendPromotion: 'Do not send promotions',
-                    method: ''
+                    method: '',
+                    total: ''
                 },
                 // List of countries for address details in the checkout form
                 countries: {
@@ -380,6 +381,9 @@
                 this.fetchSubjects();
             },
             methods: {
+                imageLink(image) {
+						return `https://after-school-classes-backend-nvk9.onrender.com/${image}`;
+				},
                 showHomeSection: function() {
                     this.showCart = false;
                     this.showSort = false;
@@ -396,7 +400,7 @@
                     this.showSortSection();
                     this.showMenu = false;
                 },
-                    showCartSection: function() {
+                showCartSection: function() {
                     this.showCart = !this.showCart;
                     this.showSort = false;
                     this.showForm = false;
@@ -419,29 +423,11 @@
                 showContactSection: function() {
                     this.showContact = !this.showContact;
                 },
-                fetchSubjects: function(){
-                    fetch('http://localhost:3000/collection/lessons', {
-                        method: 'GET', // set the HTTP method as 'GET'
-                        headers: {
-                            'Content-Type': 'application/json', // set the data type as JSON
-                        },
-                    })
-                        .then(response => response.json())
-                        .then((data) => {
-                            this.subjects = data.map((subject) => ({
-                                ...subject,
-                                _id: String(subject._id),
-                            }));
-						})
-                        .catch((error) => {
-                            alert("fetchSubjects: "+error);
-                        });
-                },
                 addToCart: function(subject) {
                     if (subject.availability > 0) {
                         // If it's a new subject, add to cart and increment orderedQuantity
-                        this.cart.push(subject._id);
-
+                        this.cart.push(subject._id); // Use _id instead of id
+    
                         // Decrease availability in both cases
                         subject.availability--;
                     }
@@ -455,59 +441,40 @@
                         product.availability++;
                         // If the orderedQuantity reaches zero, remove the product from the cart
                         if (product.orderedQuantity === 0) {
-                            const index = this.cart.indexOf(product.id);
+                            const index = this.cart.indexOf(product._id); // Use _id instead of id
                             if (index !== -1) {
                                 this.cart.splice(index, 1); // Remove the product from the cart
                             }
                         }
-                        // Change back to product section if no items in the car
+                        // Change back to product section if no items in the cart
                         if(!this.cart.length) {
                             this.showForm = false;
                             this.showCart = false;
-                            this.showSort = false
+                            this.showSort = false;
                         }
                     }
                 },
                 removeFromCart: function(product) {
-                    const index = this.cart.indexOf(product.id);
+                    const index = this.cart.indexOf(product._id); // Use _id instead of id
                     if (index !== -1) {
                         // Restore the availability
                         product.availability += product.orderedQuantity;
-
+    
                         // Reset orderedQuantity
                         product.orderedQuantity = 0;
-
+    
                         // Remove the product from the cart
                         this.cart.splice(index, 1);
-
-                        // Change back to product section if no items in the car
+    
+                        // Change back to product section if no items in the cart
                         if(!this.cart.length) {
                             this.showForm = false;
                             this.showCart = false;
-                            this.showSort = false
+                            this.showSort = false;
                         }
                     }
                 },
-                updateAvailability: function() {
-                    this.cartUniqueItems.forEach(subject => {
-                            const newAvailability = { availability: subject.availability }; // Use correct `subject`
-                            fetch(`http://localhost:3000/collection/lessons/${subject._id}`, {
-                                method: 'PUT',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(newAvailability),
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                // Update local subjects array if necessary
-                                const updatedSubject = this.subjects.find(s => s._id === subject._id);
-                                if (updatedSubject) updatedSubject.availability = data.availability;
-                            })
-                            .catch(error => {
-                                alert("fetchPUTUpdate: "+error);
-                            });
-                        });
-                },
-                validateAndSubmitForm: function() {
+                validateFormInput: function() {
                     this.errors = []; // Clear previous errors
                     // Validate email
                     if (!this.validEmail(this.order.email)) {
@@ -525,41 +492,16 @@
                     else if (!this.validString(this.order.firstName) || !this.validString(this.order.lastName)) {
                         this.errors.push('Error: Name is invalid! A name must only contain legal characters [a-zA-Z].');
                     }
-                    // Finaly showing message/error
                     // If no errors, submit the form
                     if (!this.errors.length) {
-                        const newOrder = this.order;
-
-                        // set the url to your server and route
-                        fetch('http://localhost:3000/collection/orders', {
-                            method: 'POST', // set the HTTP method as 'POST'
-                            headers: {
-                                'Content-Type': 'application/json', // set the data type as JSON
-                            },
-                            body: JSON.stringify(newOrder), // need to stringify the JSON object
-                        })
-                            .then(response => response.json())
-                            .then(responseJSON => {
-                                alert(JSON.stringify(responseJSON));
-                                this.updateAvailability();
-                            })
-                            .catch((error) => {
-                                alert("fetchPOSTOrder: "+error);
-                            });
-
-                        // Empty the cart
-                        this.cart = [];
-                        // Alert that the order is submited
-                        alert('Order submited!');
-                        // Switch to Home section
-                        this.showCart = false;
+                        this.fetchSubmit();
                     } else {
                         alert(this.errors.join("\n")); // Join error messages into a single alert
                     }
                 },
                 // Validate email with regex
                 validEmail: function(email) {
-                    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // Regex for prefix & email domail
+                    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // Regex for prefix & email domain
                     return re.test(email); // Test value
                 },
                 // Validate phone number (should only contain numbers)
@@ -579,20 +521,125 @@
                 },
                 updateScreenWidth() {
                     this.windowWidth = window.innerWidth; // Updates windowWidth when the window is resized
+                },
+                fetchSubjects: function() {
+                    fetch('https://after-school-classes-backend-nvk9.onrender.com/collection/lessons', {
+                        method: 'GET', // set the HTTP method as 'GET'
+                        headers: {
+                            'Content-Type': 'application/json', // set the data type as JSON
+                        },
+                    })
+                    .then(response => response.json())
+                    .then((data) => {
+                        this.subjects = data.map((subject) => ({
+                            ...subject,
+                            _id: String(subject._id), // Ensure _id is always a string
+                        }));
+                    })
+                    .catch((error) => {
+                        alert("fetchSubjects: "+error);
+                    });
+                },
+                fetchUpdate: function() {
+                    this.cartUniqueItems.forEach(subject => {
+                        const newAvailability = { availability: subject.availability }; // Use correct `subject`
+                        fetch(`https://after-school-classes-backend-nvk9.onrender.com/collection/lessons/${subject._id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(newAvailability),
+                        })
+                        .then(responseJSON => {
+                            // Empty the cart
+                            this.cart = [];
+                            // Switch to Home section
+                            this.showCart = false;
+                        })
+                        .then(data => {})
+                        .catch(error => {
+                            alert("fetchPUTUpdate: " + error.message);
+                        });
+                    })
+
+                },
+                fetchSubmit: function() {
+                    // Prepare the new order object
+                    const newOrder = {
+                        ...this.order, // Spread the existing order details
+                        lessons: {
+                            lesson_ids: this.cartUniqueItems.map(item => item._id), // Extract the lesson _id from cartUniqueItems
+                            orderedSeats: this.cartUniqueItems.map(item => item.orderedQuantity) // Extract the ordered quantity
+                        }
+                    };
+    
+                    // set the url to your server and route
+                    fetch('https://after-school-classes-backend-nvk9.onrender.com/collection/orders', {
+                        method: 'POST', // set the HTTP method as 'POST'
+                        headers: {
+                            'Content-Type': 'application/json', // set the data type as JSON
+                        },
+                        body: JSON.stringify(newOrder), // need to stringify the JSON object
+                    })
+                    .then(response => response.json())
+                    .then(responseJSON => {
+                        alert(JSON.stringify(responseJSON));
+                        this.fetchUpdate();
+                    })
+                    .catch((error) => {
+                        alert("fetchPOSTOrder: "+error);
+                    });
+                    // Alert that the order is submitted
+                    alert('Order submitted!');
+                },
+                fetchSearch: async function() {
+                    if (!this.searchInput){
+                        this.fetchSubjects();
+                    }
+                    // Search filter using backend
+                    if (this.searchInput) {
+                        const query = this.searchInput;
+                        fetch(`https://after-school-classes-backend-nvk9.onrender.com/search/lessons?q=${query}`, {
+                            method: 'GET', // set the HTTP method as 'GET'
+                            headers: {
+                                'Content-Type': 'application/json', // set the data type as JSON
+                            },
+                        })
+                        .then(response => response.json())
+                        .then((data) => {
+                            this.subjects = data.map((subject) => ({
+                                ...subject,
+                                _id: String(subject._id), // Ensure _id is always a string
+                            }));
+                        })
+                        .catch((error) => {
+                            alert("fetchSearch: "+error);
+                        });
+                    }
                 }
             },
             computed: {
+                displayedSubjects() {
+                    // Sort without mutating the original array
+                    return [...this.subjects].sort((a, b) => {
+                        let result = 0;
+                        if (a[this.sort.tag] > b[this.sort.tag]) {
+                        result = 1;
+                        } else if (a[this.sort.tag] < b[this.sort.tag]) {
+                        result = -1;
+                        }
+                        return this.sort.direction ? result : -result;
+                    });
+                },
                 cartItemCount() {
                     return this.cart.length;
                 },
                 cartUniqueItems() {
-                    // Use a temporary object to track ordered quantities by subject ID
+                    // Use a temporary object to track ordered quantities by subject _id
                     const uniqueItems = {};
-
+    
                     this.cart.forEach(_id => {
                         if (!uniqueItems[_id]) {
                             // Find the subject in the subjects array and initialize the object
-                            const subject = this.subjects.find(subject => subject._id === _id);
+                            const subject = this.subjects.find(subject => subject._id === _id); // Use _id instead of id
                             if (subject) {
                                 uniqueItems[_id] = {
                                     ...subject,
@@ -604,56 +651,16 @@
                             uniqueItems[_id].orderedQuantity++;
                         }
                     });
-
+    
                     // Return the unique items as an array
                     return Object.values(uniqueItems);
                 },
                 cartSubtotal() {
                     // Calculate the total price for all items in the cart
-                    return this.cart.reduce((total, id) => {
-                        const subject = this.subjects.find(s => s.id === id);
-                        return total + (subject ? subject.price * subject.orderedQuantity : 0);
+                    return this.order.total = this.cartUniqueItems.reduce((total, item) => {
+                        // Multiply price by orderedQuantity for each unique item
+                        return total + (item.price * item.orderedQuantity);
                     }, 0);
-                },
-                sortANDfilteredSubjects() {
-                    let filteredArray = [];  // This will hold the filtered subjects
-
-                    // Manually filter the subjects using a for loop
-                    if (this.searchInput) {
-                        const searchLower = this.searchInput.toLowerCase();
-                        for (let i = 0; i < this.subjects.length; i++) {
-                            const subject = this.subjects[i];
-                            // Converting numeric values to strings for comparison
-                            const priceString = subject.price.toString();
-                            const availabilityString = subject.availability.toString();
-                            // Check if the subject title, location, price or available space matches the search input
-                            if (subject.title.toLowerCase().includes(searchLower)
-                             || subject.location.toLowerCase().includes(searchLower)
-                             || priceString.includes(searchLower)
-                             || availabilityString.includes(searchLower)
-                            ) {
-                                    filteredArray.push(subject);
-                            }
-                        }
-                    } else {
-                        // If no search input, just use all subjects
-                        filteredArray = this.subjects.slice();
-                    }
-
-                    // Now apply sorting to the filtered list
-                    filteredArray.sort((a, b) => {
-                        let result = 0;
-                        if (a[this.sort.tag] > b[this.sort.tag]) {
-                            result = 1;
-                        } else if (a[this.sort.tag] < b[this.sort.tag]) {
-                            result = -1;
-                        }
-
-                        // Reverse the order if sort.direction is false
-                        return this.sort.direction ? result : -result;
-                    });
-
-                    return filteredArray;  // Return the filtered and sorted array
                 },
                 isFormInvalid() {
                     // Check if any input field is empty or if the cart is empty
@@ -671,7 +678,7 @@
                     return this.windowWidth <= 768;
                 }
             }
-        })
-    </script>
+        });
+    </script>    
 </body>
 </html>
