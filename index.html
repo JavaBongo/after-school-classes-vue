@@ -437,17 +437,27 @@
                 },
                 subtractFromCart: function(product) {
                     if (product.orderedQuantity > 0) {
+                        // Decrease orderedQuantity and increase availability in cartUniqueItems
                         product.orderedQuantity--;
                         product.availability++;
+
+                        // Find the same product in the products array using _id
+                        productInSubjects = this.subjects.find(p => p._id === product._id);
+                        if (productInSubjects) {
+                            productInSubjects.availability++;
+                            productInSubjects.orderedQuantity--;
+                        }
+
                         // If the orderedQuantity reaches zero, remove the product from the cart
                         if (product.orderedQuantity === 0) {
-                            const index = this.cart.indexOf(product._id); // Use _id instead of id
+                            const index = this.cart.indexOf(product._id); // Use _id to find the product in the cart
                             if (index !== -1) {
                                 this.cart.splice(index, 1); // Remove the product from the cart
                             }
                         }
+
                         // Change back to product section if no items in the cart
-                        if(!this.cart.length) {
+                        if (!this.cart.length) {
                             this.showForm = false;
                             this.showCart = false;
                             this.showSort = false;
@@ -460,6 +470,10 @@
                         // Restore the availability
                         product.availability += product.orderedQuantity;
     
+                        // Find the same product in the products array using _id
+                        productInSubjects = this.subjects.find(p => p._id === product._id);
+                        productInSubjects.availability += product.orderedQuantity;
+
                         // Reset orderedQuantity
                         product.orderedQuantity = 0;
     
