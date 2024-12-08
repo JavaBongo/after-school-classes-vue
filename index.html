@@ -437,26 +437,20 @@
                 },
                 subtractFromCart: function(product) {
                     if (product.orderedQuantity > 0) {
-                        // Decrease orderedQuantity and increase availability in cartUniqueItems
-                        product.orderedQuantity--;
-                        product.availability++;
-
-                        // Find the same product in the products array using _id
-                        productInSubjects = this.subjects.find(p => p._id === product._id);
+                        // Find the same product in the subjects array using _id
+                        const productInSubjects = this.subjects.find(p => p._id === product._id);
+                        
                         if (productInSubjects) {
                             productInSubjects.availability++;
-                            productInSubjects.orderedQuantity--;
                         }
 
-                        // If the orderedQuantity reaches zero, remove the product from the cart
-                        if (product.orderedQuantity === 0) {
-                            const index = this.cart.indexOf(product._id); // Use _id to find the product in the cart
-                            if (index !== -1) {
-                                this.cart.splice(index, 1); // Remove the product from the cart
-                            }
+                        // Decrease orderedQuantity by removing one instance of the product from the cart
+                        const index = this.cart.indexOf(product._id); // Find the index of the product in the cart
+                        if (index !== -1) {
+                            this.cart.splice(index, 1); // Remove one instance of the product from the cart
                         }
 
-                        // Change back to product section if no items in the cart
+                        // Change back to the product section if no items are left in the cart
                         if (!this.cart.length) {
                             this.showForm = false;
                             this.showCart = false;
@@ -465,27 +459,22 @@
                     }
                 },
                 removeFromCart: function(product) {
-                    const index = this.cart.indexOf(product._id); // Use _id instead of id
-                    if (index !== -1) {
-                        // Restore the availability
-                        product.availability += product.orderedQuantity;
-    
-                        // Find the same product in the products array using _id
-                        productInSubjects = this.subjects.find(p => p._id === product._id);
+                    // Find the same product in the subjects array using _id
+                    const productInSubjects = this.subjects.find(p => p._id === product._id);
+
+                    if (productInSubjects) {
+                        // Update the availability by adding back the orderedQuantity
                         productInSubjects.availability += product.orderedQuantity;
 
-                        // Reset orderedQuantity
-                        product.orderedQuantity = 0;
-    
-                        // Remove the product from the cart
-                        this.cart.splice(index, 1);
-    
-                        // Change back to product section if no items in the cart
-                        if(!this.cart.length) {
-                            this.showForm = false;
-                            this.showCart = false;
-                            this.showSort = false;
-                        }
+                        // Remove all instances of the product's _id from the cart
+                        this.cart = this.cart.filter(itemId => itemId !== product._id);
+                    }
+
+                    // Change back to the product section if no items are left in the cart
+                    if (!this.cart.length) {
+                        this.showForm = false;
+                        this.showCart = false;
+                        this.showSort = false;
                     }
                 },
                 validateFormInput: function() {
