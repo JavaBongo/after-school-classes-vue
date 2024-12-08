@@ -1,7 +1,12 @@
 # after-school-classes-vue
 A Vue.js-based front-end web application for students and parents to browse and purchase after-school classes and activities.
-## Website Link
-### https://javabongo.github.io/after-school-classes-vue/
+## Links
+- FrontEnd Repo: https://github.com/JavaBongo/after-school-classes-vue
+- BackEnd Repo: https://github.com/JavaBongo/after-school-classes-backend
+- Render Service: https://after-school-classes-backend-nvk9.onrender.com
+- Github Pages: https://javabongo.github.io/after-school-classes-vue/
+- FrontEnd Commits: https://github.com/JavaBongo/after-school-classes-vue/commits/main/
+- BackEnd Commits: https://github.com/JavaBongo/after-school-classes-backend/commits/main/
 ## Commit Log History
 ### Commit 1 - Inital Setup
 - Added index.html file.
